@@ -1,0 +1,690 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python的迭代器和生成器1、可迭代对象能够进行迭代逐一返回其成员项的对象称为可迭代对象。可迭代对象的例子包括•所有序列类型：如 1ist、 str 和 tuple，range•非序列类型： dict、set、文件对象:f &#x3D; open(xx，）•实现了_iter_()方法的任意对象（可迭代协议)•实现了序列语义的_getitem_()方法的任意对象。 1.1、迭代协议：    对象定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python的迭代器和生成器">
+<meta property="og:url" content="http://example.com/2020/03/16/Python%E7%9A%84%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%92%8C%E7%94%9F%E6%88%90%E5%99%A8/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python的迭代器和生成器1、可迭代对象能够进行迭代逐一返回其成员项的对象称为可迭代对象。可迭代对象的例子包括•所有序列类型：如 1ist、 str 和 tuple，range•非序列类型： dict、set、文件对象:f &#x3D; open(xx，）•实现了_iter_()方法的任意对象（可迭代协议)•实现了序列语义的_getitem_()方法的任意对象。 1.1、迭代协议：    对象定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/diedaiqi.jpg">
+<meta property="article:published_time" content="2020-03-16T13:07:35.000Z">
+<meta property="article:modified_time" content="2023-03-19T08:12:22.846Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta property="article:tag" content="python基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/diedaiqi.jpg">
+  
+  
+  
+  <title>Python的迭代器和生成器 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python的迭代器和生成器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-03-16 21:07" pubdate>
+          2020年3月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python的迭代器和生成器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python的迭代器和生成器"><a href="#Python的迭代器和生成器" class="headerlink" title="Python的迭代器和生成器"></a>Python的迭代器和生成器</h1><h3 id="1、可迭代对象"><a href="#1、可迭代对象" class="headerlink" title="1、可迭代对象"></a>1、可迭代对象</h3><p>能够进行迭代逐一返回其成员项的对象称为可迭代对象。可迭代对象的例子包括<br>•所有序列类型：如 1ist、 str 和 tuple，range<br>•非序列类型： dict、set、文件对象:f &#x3D; open(xx，）<br>•实现了_iter_()方法的任意对象（可迭代协议)<br>•实现了序列语义的_getitem_()方法的任意对象。</p>
+<p>1.1、迭代协议：<br>    对象定义了一个 <code>__iter__</code> 方法的，那么这个对象就实现了迭代协议，<code>__iter__</code>方法的返回值必须是一个迭代器</p>
+<p>迭代器(Iterator)：<br>    1.2、迭代器协议<br>        迭代器协议由一个 <code>__iter__</code> 方法和<code>__next__</code>方法共同构成。实现了这两个方法的对象就实现了迭代器协议。<br>    1、对象实现了迭代协议的对象<br>    2、对象实现了<code>__next__</code>方法，<code>__next__</code>方法在迭代完所有数据之后，会抛出<code>StopIteration</code>的错误信息</p>
+<p>迭代器和可迭代对象的操作</p>
+<p>1、实现了迭代器协议的对象，就是一个迭代器<br>2、所有的可迭代对象 都可以通过内置函数iter()转换为迭代器：<br>3、迭代器对象能够使用 内置函数next 进行迭代操作<br>4、所有的迭代器都是可迭代对象，因为迭代器协议包含了迭代协议</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> collections.abc <span class="hljs-keyword">import</span> Iterable, Iterator<br><br>st1 = <span class="hljs-string">&#x27;111m22m33&#x27;</span><br>li = [<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>]<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">isinstance</span>(st1,Iterable))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">isinstance</span>(li,Iterable))<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">isinstance</span>(st1,Iterator))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">isinstance</span>(li,Iterator))<br>st1 = <span class="hljs-string">&#x27;abcd&#x27;</span><br>li = [<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>]<br><span class="hljs-comment"># 可迭代对象转换为迭代器:内置函数iter()</span><br>s = <span class="hljs-built_in">iter</span>(st1)   <span class="hljs-comment">#  st1.__iter__()</span><br><span class="hljs-comment"># 迭代器可以使用next进行迭代操作</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(s))  <span class="hljs-comment"># st1.__next__()</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(s))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(s))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(s))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(s))<br></code></pre></td></tr></table></figure>
+
+<h5 id="5-自定义可迭代对象"><a href="#5-自定义可迭代对象" class="headerlink" title="5.自定义可迭代对象"></a>5.自定义可迭代对象</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass1</span>:<br><br>    <span class="hljs-comment"># 实现迭代协议</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__iter__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">iter</span>([<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>])<br><br><br>obj = MyClass1()<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> obj:<br>    <span class="hljs-built_in">print</span>(i)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass2</span>:<br>    value = [<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>]<br><br>    <span class="hljs-comment"># 实现序列语义</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__getitem__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-keyword">return</span> self.value[item]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__setitem__</span>(<span class="hljs-params">self, key, value</span>):<br>        <span class="hljs-keyword">pass</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__delitem__</span>(<span class="hljs-params">self, key</span>):<br>        <span class="hljs-keyword">pass</span><br><br>obj = MyClass2()<br><br>res = obj[<span class="hljs-number">0</span>]   <span class="hljs-comment">#  obj.__getitem__(0)</span><br><br><br><span class="hljs-built_in">print</span>(res)<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-1创建生成器"><a href="#1-1创建生成器" class="headerlink" title="1.1创建生成器"></a>1.1创建生成器</h4><p>#方式一：生成器表达式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python">g = (i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>))<br><br><span class="hljs-built_in">print</span>(g)<br><span class="hljs-comment"># # 生成器能不能使用next进行迭代操作？？</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-comment"># # 注意点：生成器是一种特殊的迭代器，在使用next进行迭代时，数据迭代完之后，会抛出StopIteration异常</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br></code></pre></td></tr></table></figure>
+
+<p>*方式二：生成器函数<br>注意点：<br>1、函数内部只要定义yield这个关键字，那么这个函数就是一个生成器函数<br>2、生成器函数调用是不会执行内部代码，而是直接返回一个生成器对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">work</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;----work函数----&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">999</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;------1--&quot;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">888</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;----2------&#x27;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">777</span><br><br><br>g = work()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;g:&#x27;</span>, g)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;生成的数据为：&#x27;</span>, <span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;生成的数据为：&#x27;</span>, <span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;生成的数据为：&#x27;</span>, <span class="hljs-built_in">next</span>(g))<br></code></pre></td></tr></table></figure>
+
+<p>#生成器内部不直接存储数据，只存储生成数据的计算表达式（在保存大规模数据时，可以节约内存消耗）。</p>
+<h5 id="1-1生成器和列表对比"><a href="#1-1生成器和列表对比" class="headerlink" title="1.1生成器和列表对比"></a>1.1生成器和列表对比</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">li = [<span class="hljs-number">111</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>]<br>dic = &#123;<span class="hljs-number">1</span>: <span class="hljs-number">11</span>, <span class="hljs-number">2</span>: <span class="hljs-number">3333</span>&#125;<br><br><span class="hljs-comment"># 生成器内部不直接存储数据，只存储生成数据的计算表达式（在处理大规模的数据时，可以节约内层消耗）</span><br>g1 = (i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>))<br><br><span class="hljs-built_in">print</span>(li)<br><span class="hljs-built_in">print</span>(dic)<br><span class="hljs-built_in">print</span>(g1)<br><br>li = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500000</span>)]<br>res = <span class="hljs-built_in">input</span>()<br><br>li = (i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">50000000</span>))<br>res = <span class="hljs-built_in">input</span>()<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-生成器函数"><a href="#2-生成器函数" class="headerlink" title="2 生成器函数"></a>2 生成器函数</h3><h4 id="2-1-生成器的close方法-关闭生成器"><a href="#2-1-生成器的close方法-关闭生成器" class="headerlink" title="2.1 生成器的close方法:关闭生成器"></a>2.1 生成器的close方法:关闭生成器</h4><p>print(next(g))</p>
+<p>print(next(g))<br>print(next(g))<br>g.close()<br>print(next(g))</p>
+<h4 id="2-2-send方法"><a href="#2-2-send方法" class="headerlink" title="2.2 send方法"></a>2.2 send方法</h4><p>给生成器传递参数(与生成器内部进行数据交互)<br>生成器的send方法必须在使用了一次next之后才能使用。</p>
+<p>print(‘next方法执行的结果:’, next(g))</p>
+<p>res &#x3D; g.send(‘musen’)</p>
+<p>iprint(‘send方法执行的结果:’, res)<br>res &#x3D; g.send(‘999’)<br>print(‘send方法执行的结果:’, res)</p>
+<p>res &#x3D; g.send(‘python’)</p>
+<p>print(‘send方法执行的结果:’, res)</p>
+<h4 id="2-3生成器根据send传递的参数来生成数据"><a href="#2-3生成器根据send传递的参数来生成数据" class="headerlink" title="2.3生成器根据send传递的参数来生成数据"></a>2.3生成器根据send传递的参数来生成数据</h4><p>如果要实现根据参数去生成数据的生成器：<br>1、使用send传递了参数<br>2、直接使用next 没有传参数<br>需求：根擀send方法传递的值类生成参数的2次方<br>def work()：<br>val &#x3D; None<br>for i in range(100):<br>if val:<br>val &#x3D; yield val ** 2<br>else:<br>val&#x3D; yield i+1<br>g&#x3D; work()<br>print(next(g))<br>print(g.send(11))<br>print(g.send(20))<br>print(next(g))<br>print(g.send(11))<br>print(g.send(20))<br>print(next(g))</p>
+<h3 id="3、throw方法：在生成器内部抛出指定的异常"><a href="#3、throw方法：在生成器内部抛出指定的异常" class="headerlink" title="3、throw方法：在生成器内部抛出指定的异常"></a>3、throw方法：在生成器内部抛出指定的异常</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># raise ValueError</span><br>g.throw(ValueError)<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-根据参数生成数据的案例"><a href="#4-根据参数生成数据的案例" class="headerlink" title="4.根据参数生成数据的案例"></a>4.根据参数生成数据的案例</h3><p>生成器根据send传递的参数来生成数据:</p>
+<p>如果要实现根据参数去生成数据的生成器,需要考虑下面这两种情况：<br>    1、使用send传递了参数<br>    2、直接使用next 没有传参数</p>
+<p>#需求：根据send方法传递的值类生成 参数的2次方</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">work</span>():<br>    val = <span class="hljs-literal">None</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>        <span class="hljs-keyword">if</span> val:<br>            val = <span class="hljs-keyword">yield</span> val ** <span class="hljs-number">2</span><br>        <span class="hljs-keyword">else</span>:<br>            val = <span class="hljs-keyword">yield</span> i + <span class="hljs-number">1</span><br><br><br>g = work()<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">11</span>))<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">20</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">11</span>))<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">20</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">11</span>))<br><span class="hljs-built_in">print</span>(g.send(<span class="hljs-number">20</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(g))<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-pytest中利用生成器实现测试夹具的执行流程"><a href="#5-pytest中利用生成器实现测试夹具的执行流程" class="headerlink" title="5.pytest中利用生成器实现测试夹具的执行流程"></a>5.pytest中利用生成器实现测试夹具的执行流程</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pytest<br><br><br><span class="hljs-meta">@pytest.fixture</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>():<br>    <span class="hljs-comment"># 用例前置执行</span><br>    <span class="hljs-comment"># 此处登录获取token</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;用例执行的前置脚本&quot;</span>)<br>    token = <span class="hljs-string">&#x27;asfsgyuajioghj&#x27;</span><br>    <span class="hljs-keyword">yield</span> token<br>    <span class="hljs-comment"># 用例后置执行</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;用例执行的后置脚本&quot;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">test_01</span>(<span class="hljs-params">login</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;---测试用例的执行代码----------&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;token的值：&quot;</span>, login)<br>    expected = <span class="hljs-string">&#x27;OK&#x27;</span><br>    res = <span class="hljs-string">&#x27;OK&#x27;</span><br>    <span class="hljs-keyword">assert</span> expected == res<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">1、检查测试用例的是否有指定测试夹具</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 夹具本质是一个生成器函数  </span><br><span class="hljs-string">#  pytest测试夹具执行的流程：</span><br><span class="hljs-string"></span><br><span class="hljs-string">g = login()</span><br><span class="hljs-string">token = next(g)</span><br><span class="hljs-string"></span><br><span class="hljs-string">test_01(token)</span><br><span class="hljs-string"></span><br><span class="hljs-string">try:</span><br><span class="hljs-string">    next(g)</span><br><span class="hljs-string">expect:</span><br><span class="hljs-string">    pass</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>总结</p>
+<p>在Python中，迭代器和生成器都是用来遍历数据序列的工具，但它们的实现方式和作用略有不同。</p>
+<p>迭代器是一种对象，可以通过next()方法依次访问序列中的元素。Python内置的许多数据类型都支持迭代器，比如列表、元组、字符串等。通过迭代器，我们可以遍历整个序列，而无需将整个序列加载到内存中，从而节省内存空间。迭代器可以通过定义一个__iter__()方法来创建，并且通常需要定义一个__next__()方法来遍历序列中的元素。</p>
+<p>生成器是一种特殊的迭代器，可以通过yield语句将结果生成到调用方。生成器函数在执行过程中可以挂起，并且在下次调用时可以从挂起的位置继续执行。与迭代器相比，生成器可以更加灵活地控制数据的生成和消耗，可以有效地处理大规模数据和无限序列的问题。生成器可以通过定义一个包含yield语句的函数来创建。</p>
+<p>迭代器和生成器的作用主要有以下几个方面：</p>
+<ol>
+<li>节省内存空间：通过迭代器和生成器，我们可以逐个访问序列中的元素，而无需将整个序列加载到内存中，从而节省内存空间。</li>
+<li>适用于大规模数据和无限序列：迭代器和生成器可以更加灵活地控制数据的生成和消耗，可以有效地处理大规模数据和无限序列的问题。</li>
+<li>增加程序的可读性和可维护性：使用迭代器和生成器可以使代码更加简洁、清晰，提高代码的可读性和可维护性。</li>
+<li>方便数据处理和转换：通过迭代器和生成器，我们可以方便地对序列进行处理和转换，例如对序列中的元素进行筛选、排序、合并等操作。</li>
+</ol>
+<p>总之，迭代器和生成器是Python中非常重要的语言特性，能够大大提高代码的效率和可读性，是Python程序员必须掌握的基本技能之一。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+        <a href="/tags/python%E5%9F%BA%E7%A1%80/">#python基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python的迭代器和生成器</div>
+      <div>http://example.com/2020/03/16/Python的迭代器和生成器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年3月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/18/Python%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0%E6%89%A9%E5%B1%95%E3%80%81%E5%81%8F%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85%E5%87%BD%E6%95%B0/" title="Python内置函数扩展、偏函数和闭包函数">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python内置函数扩展、偏函数和闭包函数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/12/Python%E6%8E%A8%E5%AF%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/" title="Python推导式详解">
+                        <span class="hidden-mobile">Python推导式详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

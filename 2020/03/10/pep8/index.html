@@ -18,21 +18,26 @@
   <meta name="author" content="魏振">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="python的编码规范1.1 pep8规范1.缩进*每一级缩进使用4个空格。 *续行应该与其包裹元素对齐，要么使用圆括号、方括号和花括号内的隐式行连接来垂直对齐，要么使用挂行缩进对齐3。当使用挂行缩进时，应该考虑到第一行不应该有参数，以及使用缩进以区分自己是续行。 2.行的最大长度Ctrl+Alt+L (格式化代码快捷键 ——&gt;&gt; 代码会自动按照pep8规范格式化) *所有行限制的最大">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2023/03/17/hello-world/index.html">
+<meta property="og:title" content="python的编码规范">
+<meta property="og:url" content="http://example.com/2020/03/10/pep8/index.html">
 <meta property="og:site_name" content="open测试猿">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="python的编码规范1.1 pep8规范1.缩进*每一级缩进使用4个空格。 *续行应该与其包裹元素对齐，要么使用圆括号、方括号和花括号内的隐式行连接来垂直对齐，要么使用挂行缩进对齐3。当使用挂行缩进时，应该考虑到第一行不应该有参数，以及使用缩进以区分自己是续行。 2.行的最大长度Ctrl+Alt+L (格式化代码快捷键 ——&gt;&gt; 代码会自动按照pep8规范格式化) *所有行限制的最大">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-03-17T15:19:25.892Z">
-<meta property="article:modified_time" content="2023-03-18T12:58:12.178Z">
+<meta property="og:image" content="http://example.com/img/pep8.jpeg">
+<meta property="article:published_time" content="2020-03-10T02:05:15.000Z">
+<meta property="article:modified_time" content="2023-03-19T07:25:25.380Z">
 <meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python基础">
+<meta property="article:tag" content="Python编码规范">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/pep8.jpeg">
   
   
   
-  <title>Hello World - open测试猿</title>
+  <title>python的编码规范 - open测试猿</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="python的编码规范"></span>
           
         </div>
 
@@ -209,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-03-17 23:19" pubdate>
-          2023年3月17日 晚上
+        <time datetime="2020-03-10 10:05" pubdate>
+          2020年3月10日 上午
         </time>
       </span>
     
@@ -221,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          367 字
+          1.9k 字
         
       </span>
     
@@ -232,7 +237,7 @@
         
         
         
-          4 分钟
+          16 分钟
         
       </span>
     
@@ -270,24 +275,45 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">python的编码规范</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
+                <h1 id="python的编码规范"><a href="#python的编码规范" class="headerlink" title="python的编码规范"></a>python的编码规范</h1><h4 id="1-1-pep8规范"><a href="#1-1-pep8规范" class="headerlink" title="1.1 pep8规范"></a>1.1 pep8规范</h4><h5 id="1-缩进"><a href="#1-缩进" class="headerlink" title="1.缩进"></a>1.缩进</h5><p>*每一级缩进使用4个空格。</p>
+<p>*续行应该与其包裹元素对齐，要么使用圆括号、方括号和花括号内的隐式行连接来垂直对齐，要么使用挂行缩进对齐<a target="_blank" rel="noopener" href="https://blog.csdn.net/ratsniper/article/details/78954852#fn:7">3</a>。当使用挂行缩进时，应该考虑到第一行不应该有参数，以及使用缩进以区分自己是续行。</p>
+<h5 id="2-行的最大长度"><a href="#2-行的最大长度" class="headerlink" title="2.行的最大长度"></a>2.行的最大长度</h5><p>Ctrl+Alt+L (格式化代码快捷键 ——&gt;&gt; 代码会自动按照pep8规范格式化)</p>
+<p>*所有行限制的最大字符数为79个.</p>
+<p>*注释的限制最大字符数是72个</p>
+<p>\ 表示隐式换行</p>
+<p>*如果一个字符串过长，可以回车，pycharm会自动补一个\  隐式换行连接符。</p>
+<h5 id="3-空行"><a href="#3-空行" class="headerlink" title="3.空行"></a>3.空行</h5><p>*顶层函数和类的定义，前后用两个空行隔开。</p>
+<p>*类的方法定义用一个空行隔开</p>
+<h5 id="4-注释"><a href="#4-注释" class="headerlink" title="4.注释"></a>4.注释</h5><p>与代码相矛盾的注释比没有注释还糟，当代码更改时，优先更新对应的注释！<br>注释应该是完整的句子。如果一个注释是一个短语或句子，它的第一个单词应该大写，除非它是以小写字母开头的标识符(永远不要改变标识符的大小写！)。<br>如果注释很短，结尾的句号可以省略。块注释一般由完整句子的一个或多个段落组成，并且每句话结束有个句号。<br>在句尾结束的时候应该使用两个空格。<br>当用英文书写时，遵循Strunk and White （译注：《Strunk and White, The Elements of Style》）的书写风格。<br>在非英语国家的Python程序员，请使用英文写注释，除非你120%的确信你的代码不会被使用其他语言的人阅读。</p>
+<h6 id="1-块注释"><a href="#1-块注释" class="headerlink" title="1.块注释"></a>1.块注释</h6><p>块注释通常适用于跟随它们的某些（或全部）代码，并缩进到与代码相同的级别。块注释的每一行开头使用一个#和一个空格（除非块注释内部缩进文本）。<br>块注释内部的段落通过只有一个#的空行分隔。</p>
+<h6 id="2-行内注释"><a href="#2-行内注释" class="headerlink" title="2.行内注释"></a>2.行内注释</h6><p>有节制地使用行内注释。<br>行内注释是与代码语句同行的注释。行内注释和代码至少要有两个空格分隔。注释由#和一个空格开始。<br>事实上，如果状态明显的话，行内注释是不必要的，反而会分散注意力。</p>
+<h6 id="3-文档字符串注释"><a href="#3-文档字符串注释" class="headerlink" title="3.文档字符串注释"></a>3.文档字符串注释</h6><p>编写好的文档说明（也叫“docstrings”）的约定在<a target="_blank" rel="noopener" href="http://legacy.python.org/dev/peps/pep-0257/">PEP 257</a>中永恒不变。</p>
+<ul>
+<li>要为所有的公共模块，函数，类以及方法编写文档说明。非公共的方法没有必要，但是应该有一个描述方法具体作用的注释。这个注释应该在def那一行之后。</li>
+<li><a target="_blank" rel="noopener" href="http://legacy.python.org/dev/peps/pep-0257/">PEP 257</a> 描述了写出好的文档说明相关的约定。特别需要注意的是，多行文档说明使用的结尾三引号应该自成一行</li>
+</ul>
+<p> <code>#__doc__ 属性：获取对象的文档字符串注释</code></p>
+<p>示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests`<br><br>`<span class="hljs-built_in">print</span>(requests.__doc__)<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
+<p>类中的文档字符串注释：</p>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Musen</span>:`<br><br>`<span class="hljs-string">&quot;&quot;&quot;`</span><br><span class="hljs-string"></span><br><span class="hljs-string">`mesen这个类的文档字符串注释`</span><br><span class="hljs-string"></span><br><span class="hljs-string">`详细的功能介绍`</span><br><span class="hljs-string"></span><br><span class="hljs-string">`&quot;&quot;&quot;</span>`<br><br>​	<span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>(<span class="hljs-params">self,name :<span class="hljs-built_in">str</span>,age :<span class="hljs-built_in">int</span></span>)  -&gt; <span class="hljs-literal">None</span>:   <span class="hljs-comment">#name str类型 age int类型 方法返回值 为None </span><br><br>​			<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">​			work1这个方法的文档字符串注释</span><br><span class="hljs-string"></span><br><span class="hljs-string">​			该方法功能的整体说明</span><br><span class="hljs-string"></span><br><span class="hljs-string">​			param name：名字</span><br><span class="hljs-string"></span><br><span class="hljs-string">​			param  age：年龄</span><br><span class="hljs-string"></span><br><span class="hljs-string">​			&quot;&quot;&quot;</span><br><br>`<span class="hljs-built_in">print</span>(MuSen.__doc__)<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h5 id="5-命名的约定"><a href="#5-命名的约定" class="headerlink" title="5.命名的约定"></a>5.命名的约定</h5><h6 id="1-变量命名"><a href="#1-变量命名" class="headerlink" title="1.变量命名"></a>1.变量命名</h6><p>永远不要使用字母‘l’（小写的L），‘O’（大写的O），或者‘I’（大写的I）作为单字符变量名。<br>在有些字体里，这些字符无法和数字0和1区分，如果想用‘l’，用‘L’代替。</p>
+<h6 id="2-函数命名"><a href="#2-函数命名" class="headerlink" title="2.函数命名"></a>2.函数命名</h6><p>函数名应该小写，如果想提高可读性可以用下划线分隔。<br>大小写混合仅在为了兼容原来主要以大小写混合风格的情况下使用（比如 threading.py），保持向后兼容性。</p>
+<h6 id="3-类命名"><a href="#3-类命名" class="headerlink" title="3.类命名"></a>3.类命名</h6><p>类名一般使用首字母大写的约定。<br>在接口被文档化并且主要被用于调用的情况下，可以使用函数的命名风格代替。<br>注意，对于内置的变量命名有一个单独的约定：大部分内置变量是单个单词（或者两个单词连接在一起），首字母大写的命名法只用于异常名或者内部的常量。</p>
+<p>4.类里面的函数和方法参数</p>
+<p>始终要将 self 作为实例方法的的第一个参数。<br>始终要将 cls 作为类静态方法的第一个参数。<br>如果函数的参数名和已有的关键词冲突，在最后加单一下划线比缩写或随意拼写更好。因此 class_ 比 clss 更好。（也许最好用同义词来避免这种冲突）</p>
+<p>参考资料:</p>
+<p>pep8编码规范 <a target="_blank" rel="noopener" href="https://blog.csdn.net/ratsniper/article/details/78954852">https://blog.csdn.net/ratsniper/article/details/78954852</a></p>
 
                 
               </div>
@@ -297,6 +323,17 @@
               <div class="post-metas my-3">
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E5%9F%BA%E7%A1%80/">#python基础</a>
+      
+        <a href="/tags/Python%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/">#Python编码规范</a>
+      
+    </div>
+  
 </div>
 
 
@@ -305,8 +342,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>http://example.com/2023/03/17/hello-world/</div>
+      <div>python的编码规范</div>
+      <div>http://example.com/2020/03/10/pep8/</div>
     </div>
     <div class="license-meta">
       
@@ -318,7 +355,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年3月17日</div>
+          <div>2020年3月10日</div>
         </div>
       
       
@@ -349,6 +386,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2020/03/12/Python%E6%8E%A8%E5%AF%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/" title="Python推导式详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python推导式详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
@@ -452,7 +495,8 @@
     <div class="footer-inner">
   
     <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
     </div>
   
   

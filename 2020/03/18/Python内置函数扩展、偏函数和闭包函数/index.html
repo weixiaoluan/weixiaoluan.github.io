@@ -1,0 +1,705 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python内置函数扩展、偏函数和闭包函数1.1、匿名函数python中有一种特殊的函数，不需要使用def去事定义，也不用给函数起名字，用过lamda表达式来定义，这种函数叫匿名函数匿名函数格式lambda 参数：表达式（返回值）问题需求:将以下函数改成匿名函数#普通函数def fun1(varl):        return var12#匿名函数定义后也可以用变量接收保存，但是一般不这样做fu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python内置函数扩展、偏函数和闭包函数">
+<meta property="og:url" content="http://example.com/2020/03/18/Python%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0%E6%89%A9%E5%B1%95%E3%80%81%E5%81%8F%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python内置函数扩展、偏函数和闭包函数1.1、匿名函数python中有一种特殊的函数，不需要使用def去事定义，也不用给函数起名字，用过lamda表达式来定义，这种函数叫匿名函数匿名函数格式lambda 参数：表达式（返回值）问题需求:将以下函数改成匿名函数#普通函数def fun1(varl):        return var12#匿名函数定义后也可以用变量接收保存，但是一般不这样做fu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/neizhihanshu.jpg">
+<meta property="article:published_time" content="2020-03-18T15:01:21.000Z">
+<meta property="article:modified_time" content="2023-03-19T08:35:45.867Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/neizhihanshu.jpg">
+  
+  
+  
+  <title>Python内置函数扩展、偏函数和闭包函数 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python内置函数扩展、偏函数和闭包函数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-03-18 23:01" pubdate>
+          2020年3月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python内置函数扩展、偏函数和闭包函数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python内置函数扩展、偏函数和闭包函数"><a href="#Python内置函数扩展、偏函数和闭包函数" class="headerlink" title="Python内置函数扩展、偏函数和闭包函数"></a>Python内置函数扩展、偏函数和闭包函数</h1><h4 id="1-1、匿名函数"><a href="#1-1、匿名函数" class="headerlink" title="1.1、匿名函数"></a>1.1、匿名函数</h4><p>python中有一种特殊的函数，不需要使用def去事定义，也不用给函数起名字，用过lamda表达式来定义，这种函<br>数叫匿名函数<br>匿名函数格式<br>lambda 参数：表达式（返回值）<br>问题需求:将以下函数改成匿名函数<br>#普通函数<br>def fun1(varl):<br>        return var1<em>2<br>#匿名函数定义后也可以用变量接收保存，但是一般不这样做<br>fun1 &#x3D; lambda var1 : var1</em>2<br>匿名函数的实际应用：匿名函数一般用来定义在表达式简单的函数，使用匿名函数可以简化代码，像上面的map,<br>filter等函数的使用。应用参数：通常用于函数传参时传递函数的场景</p>
+<p>#问题需求一：对下面的列表进行排序（规则：根据列表中每个元素的第二个值的大小进行排序）<br>li &#x3D;[[1, 10,32]，[3， 22,99]，[2, 7,77]]<br>#问题需求二：对下面的列表进行排序（规则：根据元素的name字段的值的大小进行排序）<br>li2 &#x3D;[{‘id’: 1,”name”: 100},{‘id’： 7,”name”: 9},{‘id’: 3,”name”: 1}]</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">add2 = <span class="hljs-keyword">lambda</span> a, b: a + b<br>res2 = add2(<span class="hljs-number">33</span>, <span class="hljs-number">44</span>)<br><span class="hljs-built_in">print</span>(res2)<br></code></pre></td></tr></table></figure>
+
+<p>应用参数：通常用于函数传参是传递函数的场景</p>
+<p>filter过滤器</p>
+<p>map:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># li = [11,3,43,54,5]</span><br><span class="hljs-comment"># li.sort()</span><br><br><span class="hljs-comment"># li = [[11, 2], [1, 21], [93, 7], [87, 0], [23, 6]]</span><br>li = [<br>    &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;musen&quot;</span>, <span class="hljs-string">&#x27;age&#x27;</span>: <span class="hljs-number">18</span>, <span class="hljs-string">&#x27;height&#x27;</span>: <span class="hljs-number">155</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;musen&quot;</span>, <span class="hljs-string">&#x27;age&#x27;</span>: <span class="hljs-number">17</span>, <span class="hljs-string">&#x27;height&#x27;</span>: <span class="hljs-number">178</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;musen&quot;</span>, <span class="hljs-string">&#x27;age&#x27;</span>: <span class="hljs-number">30</span>, <span class="hljs-string">&#x27;height&#x27;</span>: <span class="hljs-number">175</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;musen&quot;</span>, <span class="hljs-string">&#x27;age&#x27;</span>: <span class="hljs-number">50</span>, <span class="hljs-string">&#x27;height&#x27;</span>: <span class="hljs-number">185</span>&#125;,<br>]<br><span class="hljs-comment"># 根据列表中每个数据的age值大小进行排序</span><br>li.sort(key=<span class="hljs-keyword">lambda</span> x: x[<span class="hljs-string">&#x27;height&#x27;</span>])<br><span class="hljs-built_in">print</span>(li)<br></code></pre></td></tr></table></figure>
+
+<p>eval：</p>
+<p><code>eval()</code>函数是Python的一个内置函数，它可以执行一段字符串形式的Python代码，并返回执行结果。其基本语法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">eval</span>(expression[, <span class="hljs-built_in">globals</span>[, <span class="hljs-built_in">locals</span>]])<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>expression</code>是需要执行的Python代码，可以是字符串或者代码对象；<code>globals</code>和<code>locals</code>是可选参数，分别代表全局命名空间和局部命名空间。</p>
+<p><code>eval()</code>函数的作用主要是将字符串形式的Python代码转换成可执行的代码并执行，可以实现一些动态性较强的操作。例如，可以用<code>eval()</code>函数计算一个字符串形式的数学表达式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">expression = <span class="hljs-string">&quot;2 + 3 * 4&quot;</span><br>result = <span class="hljs-built_in">eval</span>(expression)<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出14</span><br></code></pre></td></tr></table></figure>
+
+<p>还可以通过<code>eval()</code>函数来动态创建Python对象，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">expression = <span class="hljs-string">&quot;&#123;&#x27;name&#x27;: &#x27;John&#x27;, &#x27;age&#x27;: 30&#125;&quot;</span><br>person = <span class="hljs-built_in">eval</span>(expression)<br><span class="hljs-built_in">print</span>(person)  <span class="hljs-comment"># 输出&#123;&#x27;name&#x27;: &#x27;John&#x27;, &#x27;age&#x27;: 30&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，由于<code>eval()</code>函数可以执行任意字符串形式的Python代码，因此也存在一定的安全风险。如果执行的代码来自于不可信的来源，可能会导致程序受到攻击或者损坏。因此，在使用<code>eval()</code>函数时需要谨慎，尽量避免执行来自不可信的源代码。</p>
+<p>all：</p>
+<p>在Python中，<code>all()</code> 是一个内置函数，用于判断一个可迭代对象中的所有元素是否都为 True。如果是，则返回 True；否则返回 False。</p>
+<p><code>all()</code> 的语法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">all</span>(iterable)<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>iterable</code> 表示一个可迭代对象，如列表、元组、字典、集合等。</p>
+<p><code>all()</code> 的返回值类型为布尔型。</p>
+<p>下面是一个例子，演示如何使用 <code>all()</code> 函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">lst1 = [<span class="hljs-literal">True</span>, <span class="hljs-literal">True</span>, <span class="hljs-literal">False</span>, <span class="hljs-literal">True</span>]<br>lst2 = [<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>]<br>lst3 = []<br>lst4 = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>(lst1)) <span class="hljs-comment"># False</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>(lst2)) <span class="hljs-comment"># True</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>(lst3)) <span class="hljs-comment"># True</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>(lst4)) <span class="hljs-comment"># False</span><br></code></pre></td></tr></table></figure>
+
+<p>在上述例子中，<code>all()</code> 分别对四个列表进行判断。<code>lst1</code> 中有一个元素为 False，因此 <code>all(lst1)</code> 的返回值为 False；<code>lst2</code> 中的所有元素都为非零值，因此 <code>all(lst2)</code> 的返回值为 True；<code>lst3</code> 为空列表，因此 <code>all(lst3)</code> 的返回值为 True；<code>lst4</code> 中有一个元素为 0，因此 <code>all(lst4)</code> 的返回值为 False。</p>
+<p>总之，<code>all()</code> 可以判断一个可迭代对象中的所有元素是否都为 True，是编写 Python 程序中很常用的函数之一。</p>
+<p>any:</p>
+<p>在Python中，<code>any()</code>函数是一个内置函数，它用于检查给定可迭代对象中是否至少有一个元素为真值（True），如果至少有一个元素为真，则返回True，否则返回False。</p>
+<p><code>any()</code>函数的语法如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">any</span><span class="hljs-params">(iterable)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>iterable</code>是一个可迭代对象，比如列表、元组、集合等。</p>
+<p>下面是一个使用<code>any()</code>函数的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">my_list = [<span class="hljs-literal">False</span>, <span class="hljs-literal">False</span>, <span class="hljs-literal">True</span>, <span class="hljs-literal">False</span>]<br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">any</span>(my_list):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;至少有一个元素为True&quot;</span>)<br><span class="hljs-keyword">else</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;所有元素都为False&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">至少有一个元素为<span class="hljs-literal">True</span><br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>any()</code>函数检查了<code>my_list</code>列表中的所有元素，发现有一个元素为<code>True</code>，于是返回了<code>True</code>。</p>
+<p><code>any()</code>函数非常适合用于检查可迭代对象中是否存在某个条件的元素，它可以帮助我们编写更加简洁和优雅的代码。</p>
+<p>zip:</p>
+<p><code>zip</code>是Python内置的一个函数，它接受任意多个（包括0个和1个）序列作为参数，返回一个由各个序列中的相同位置的元素组成的元组的迭代器。可以将多个序列进行配对，并同时迭代处理，这个过程类似于拉链的作用，因此也常被称为“拉链函数”。</p>
+<p><code>zip</code>函数的基本语法格式为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">zip</span>(*iterables)<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>*iterables</code>表示传入任意多个序列。</p>
+<p>举例来说，如果有两个列表a和b，想要将它们对应的元素配对在一起，可以使用<code>zip</code>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">a = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>b = [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>]<br>c = <span class="hljs-built_in">zip</span>(a, b)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(c))<br></code></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[(<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;a&#x27;</span>), (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;b&#x27;</span>), (<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;c&#x27;</span>)]<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，<code>zip</code>函数将a和b两个列表的相同位置的元素进行了配对，并返回了一个包含这些元素的元组列表。</p>
+<p>除了基本用法之外，<code>zip</code>函数还可以和其他函数或语句进行组合使用，例如结合列表推导式或<code>filter</code>函数等，以实现更加复杂的数据处理逻辑。</p>
+<h4 id="1-2偏函数"><a href="#1-2偏函数" class="headerlink" title="1.2偏函数"></a>1.2偏函数</h4><p>问题一：什么是偏函数?<br>在Python的内置模块functools 提供了很多有用的功能，其中一个就是偏函数（partial）。<br>问题二：偏函数有什么用?<br>当函数的参数个数太多，需要简化时，使用 functools.partial可以创建一个新的函数，这个新函数可以固定住<br>原函数的部分参数，从而在调用时更简单。<br>偏函数应用案列<br>#在我们之前学到的内置函数中filter中，调用的时候需要传入两个参数，第一个是函数，第二个是我们需要过滤的可迭<br>代类型的数据，<br>#我们可以通过传入不同的过滤条件去过滤出来我们需要的数据。<br>filter(lambda x:x&gt;3,1i1)<br>filter(lambda x:x&gt;10,1i1)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> partial<br><br><br><span class="hljs-comment"># 偏函数：固定函数的参数，简化函数调用时的参数传递</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work</span>(<span class="hljs-params">name, datas</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    :param name: 使用者的名字</span><br><span class="hljs-string">    :param datas: 传递进来的数据</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#123;&#125;-&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(name, datas)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python">res = work(<span class="hljs-string">&#x27;musen&#x27;</span>,<span class="hljs-string">&#x27;1212&#x27;</span>)<br>res2 = work(<span class="hljs-string">&#x27;musen&#x27;</span>,<span class="hljs-string">&#x27;aaaa&#x27;</span>)<br>res3 = work(<span class="hljs-string">&#x27;musen&#x27;</span>,<span class="hljs-string">&#x27;dddd&#x27;</span>)<br><br><span class="hljs-built_in">print</span>(res)<br><span class="hljs-built_in">print</span>(res2)<br><span class="hljs-built_in">print</span>(res3)<br><br>work2 = partial(work, datas=<span class="hljs-string">&#x27;musen&#x27;</span>)<br><br>r1 = work2(<span class="hljs-string">&#x27;222&#x27;</span>)<br>r2 = work2(<span class="hljs-number">333</span>)<br>r3 = work2(<span class="hljs-number">444</span>)<br>r4 = work2(<span class="hljs-number">5555</span>)<br><span class="hljs-built_in">print</span>(r1, r2, r3, r4)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work3</span>(<span class="hljs-params">datas</span>):<br>    work(<span class="hljs-string">&#x27;musen&#x27;</span>, datas)<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-3闭包函数"><a href="#1-3闭包函数" class="headerlink" title="1.3闭包函数"></a>1.3闭包函数</h4><p>在 Python 中，闭包是指一个函数对象，它引用了外部作用域中的一个或多个变量，即使这些变量在外部作用域已经不存在，它仍然可以访问并修改这些变量。简而言之，闭包是一种特殊的函数，它可以“记住”在创建它的时候所处的环境。</p>
+<p>闭包函数可以用来实现许多有趣的功能，例如在 Python 中，常常使用闭包来实现装饰器。</p>
+<p>闭包函数的基本格式如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">outer_func</span>(<span class="hljs-params">param</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">inner_func</span>():<br>        <span class="hljs-comment"># do something with param</span><br>        <span class="hljs-keyword">return</span> result<br>    <span class="hljs-keyword">return</span> inner_func<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>outer_func</code> 是外层函数，接受一个参数 <code>param</code>，返回一个内层函数 <code>inner_func</code>，内层函数可以访问外层函数的参数和变量，然后返回一个结果 <code>result</code>。</p>
+<p>当我们调用 <code>outer_func(param)</code> 时，它会返回一个函数对象 <code>inner_func</code>，这个函数可以独立地被调用，但它仍然可以访问外层函数 <code>outer_func</code> 的作用域。这就是闭包的本质。</p>
+<p>下面是一个具体的例子，演示了如何使用闭包来实现一个计数器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">make_counter</span>():<br>    count = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">counter</span>():<br>        <span class="hljs-keyword">nonlocal</span> count<br>        count += <span class="hljs-number">1</span><br>        <span class="hljs-keyword">return</span> count<br>    <span class="hljs-keyword">return</span> counter<br><br>counter1 = make_counter()<br>counter2 = make_counter()<br><br><span class="hljs-built_in">print</span>(counter1())  <span class="hljs-comment"># 输出 1</span><br><span class="hljs-built_in">print</span>(counter1())  <span class="hljs-comment"># 输出 2</span><br><span class="hljs-built_in">print</span>(counter2())  <span class="hljs-comment"># 输出 1</span><br><span class="hljs-built_in">print</span>(counter1())  <span class="hljs-comment"># 输出 3</span><br><span class="hljs-built_in">print</span>(counter2())  <span class="hljs-comment"># 输出 2</span><br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，我们定义了一个 <code>make_counter</code> 函数，它返回了一个内层函数 <code>counter</code>。在 <code>counter</code> 函数中，我们定义了一个变量 <code>count</code>，并将其初始化为 0。每次调用 <code>counter</code> 函数时，它都会将 <code>count</code> 的值加 1，并返回新的值。</p>
+<p>我们用 <code>make_counter</code> 函数分别创建了两个计数器 <code>counter1</code> 和 <code>counter2</code>，它们是两个独立的函数对象，它们各自维护着自己的 <code>count</code> 变量，彼此之间互不干扰。这正是闭包的特点所在。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python内置函数扩展、偏函数和闭包函数</div>
+      <div>http://example.com/2020/03/18/Python内置函数扩展、偏函数和闭包函数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年3月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/16/Python%E7%9A%84%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%92%8C%E7%94%9F%E6%88%90%E5%99%A8/" title="Python的迭代器和生成器">
+                        <span class="hidden-mobile">Python的迭代器和生成器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
