@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)开放封闭原则开放封闭原则是面向对象设计中的一项重要原则，指的是软件实体（如类、模块、函数等）应该对扩展开放，对修改关闭。具体来说，开放封闭原则要求我们设计软件实体时，应该尽量避免修改已有的代码，而是应该通过扩展已有的代码来实现新的功能。 开放封闭原则的核心思想是通过抽象来实现扩展。在软件设计时，我们应该尽量使用抽象的方式来描述系统的功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)">
+<meta property="og:url" content="http://example.com/2020/03/22/%E9%AB%98%E7%BA%A7Python%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%EF%BC%9A%E8%AE%A9%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E3%80%81%E6%9B%B4%E5%BC%BA%E5%A4%A7(%E4%B8%80)/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)开放封闭原则开放封闭原则是面向对象设计中的一项重要原则，指的是软件实体（如类、模块、函数等）应该对扩展开放，对修改关闭。具体来说，开放封闭原则要求我们设计软件实体时，应该尽量避免修改已有的代码，而是应该通过扩展已有的代码来实现新的功能。 开放封闭原则的核心思想是通过抽象来实现扩展。在软件设计时，我们应该尽量使用抽象的方式来描述系统的功">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/zhuangshiqi.jpg">
+<meta property="article:published_time" content="2020-03-22T14:23:35.000Z">
+<meta property="article:modified_time" content="2023-03-19T09:29:31.987Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/zhuangshiqi.jpg">
+  
+  
+  
+  <title>高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一) - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-03-22 22:23" pubdate>
+          2020年3月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="高级Python编程技巧之装饰器：让你的代码更灵活、更强大-一"><a href="#高级Python编程技巧之装饰器：让你的代码更灵活、更强大-一" class="headerlink" title="高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)"></a>高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)</h1><h2 id="开放封闭原则"><a href="#开放封闭原则" class="headerlink" title="开放封闭原则"></a>开放封闭原则</h2><p>开放封闭原则是面向对象设计中的一项重要原则，指的是软件实体（如类、模块、函数等）应该对扩展开放，对修改关闭。具体来说，开放封闭原则要求我们设计软件实体时，应该尽量避免修改已有的代码，而是应该通过扩展已有的代码来实现新的功能。</p>
+<p>开放封闭原则的核心思想是通过抽象来实现扩展。在软件设计时，我们应该尽量使用抽象的方式来描述系统的功能和特性，而不是依赖于具体的实现细节。这样，当需要增加新的功能时，只需要增加新的抽象，而不需要修改已有的代码。</p>
+<p>下面举一个简单的例子来说明开放封闭原则的应用。假设我们有一个计算器程序，该程序可以进行加、减、乘、除四种运算。如果我们使用开放封闭原则来设计这个程序，那么我们可以先定义一个抽象的运算接口，该接口包含一个计算方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Operation</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate</span>(<span class="hljs-params">self, num1, num2</span>):<br>        <span class="hljs-keyword">pass</span><br></code></pre></td></tr></table></figure>
+
+<p>然后，我们可以针对每种运算定义一个具体的类，这些类都实现了运算接口：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Add</span>(<span class="hljs-title class_ inherited__">Operation</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate</span>(<span class="hljs-params">self, num1, num2</span>):<br>        <span class="hljs-keyword">return</span> num1 + num2<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Subtract</span>(<span class="hljs-title class_ inherited__">Operation</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate</span>(<span class="hljs-params">self, num1, num2</span>):<br>        <span class="hljs-keyword">return</span> num1 - num2<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Multiply</span>(<span class="hljs-title class_ inherited__">Operation</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate</span>(<span class="hljs-params">self, num1, num2</span>):<br>        <span class="hljs-keyword">return</span> num1 * num2<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Divide</span>(<span class="hljs-title class_ inherited__">Operation</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate</span>(<span class="hljs-params">self, num1, num2</span>):<br>        <span class="hljs-keyword">return</span> num1 / num2<br></code></pre></td></tr></table></figure>
+
+<p>这样，当需要增加新的运算时，只需要定义一个新的类，并实现运算接口即可。这个过程中，我们并没有修改已有的代码，而是通过扩展已有的代码来实现新的功能。</p>
+<p>总之，开放封闭原则是面向对象设计中的一个非常重要的原则，它可以帮助我们设计出具有可扩展性和可维护性的软件系统。在实际应用中，我们应该尽可能地遵守这个原则，从而提高软件系统的可靠性和可用性。</p>
+<h2 id="装饰器的介绍"><a href="#装饰器的介绍" class="headerlink" title="装饰器的介绍"></a>装饰器的介绍</h2><p>Python装饰器是一种特殊的语法，用于在不改变已有函数代码的情况下，为函数添加额外的功能或修改其行为。装饰器常常被用于日志记录、性能分析、输入合法性检查、缓存等场景。</p>
+<h2 id="装饰器的示例代码"><a href="#装饰器的示例代码" class="headerlink" title="装饰器的示例代码"></a>装饰器的示例代码</h2><p>以下是一个简单的装饰器示例代码：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">pythonCopy code<br>def my_decorator(func):<br>    def <span class="hljs-keyword">wrapper</span>():<br>        print(&quot;Before the function is called.&quot;)<br>        func()<br>        print(&quot;After the function is called.&quot;)<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">wrapper</span><br><br>@my_decorator<br>def say_hello():<br>    print(&quot;Hello!&quot;)<br><br>say_hello()<br></code></pre></td></tr></table></figure>
+
+<p>在这个示例代码中，我们定义了一个名为<code>my_decorator</code>的装饰器函数，它接受一个函数作为参数，并返回一个新的函数<code>wrapper</code>。这个新函数<code>wrapper</code>在调用原始函数之前和之后都执行了一些额外的代码。我们还使用装饰器语法<code>@my_decorator</code>来装饰<code>say_hello</code>函数，使得它在调用前后分别打印了”Before the function is called.”和”After the function is called.”。</p>
+<h2 id="装饰器的装饰过程"><a href="#装饰器的装饰过程" class="headerlink" title="装饰器的装饰过程"></a>装饰器的装饰过程</h2><p>装饰器在Python中是通过函数或类实现的。在Python中，函数是一等公民，因此可以将函数作为参数传递给另一个函数，并返回一个函数。</p>
+<p>当我们使用装饰器语法将一个函数装饰器应用于另一个函数时，Python会自动调用装饰器函数，并将被装饰函数作为参数传递给它。装饰器函数会在不修改原始函数代码的情况下，返回一个新的函数或类，用于替换原始函数或类。当我们调用经过装饰的函数时，实际上是调用了这个新的函数或类。</p>
+<h2 id="装饰带参数的函数"><a href="#装饰带参数的函数" class="headerlink" title="装饰带参数的函数"></a>装饰带参数的函数</h2><p>在Python中，装饰带参数的函数需要在装饰器函数内部再定义一层函数，该函数用于接收原函数的参数并返回一个新的函数，新的函数才是真正被调用的函数。下面是一个示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">pythonCopy code<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">decorator</span>(<span class="hljs-params">func</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;decorator start&quot;</span>)<br>        result = func(*args, **kwargs)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;decorator end&quot;</span>)<br>        <span class="hljs-keyword">return</span> result<br>    <span class="hljs-keyword">return</span> wrapper<br><br><span class="hljs-meta">@decorator</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a, b</span>):<br>    <span class="hljs-keyword">return</span> a + b<br><br>result = add(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(result)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，装饰器<code>decorator</code>定义了一个内部函数<code>wrapper</code>，<code>wrapper</code>接收原函数的参数<code>*args</code>和<code>**kwargs</code>，并在调用原函数前后输出一些信息。注意，在调用原函数时，需要使用<code>*args</code>和<code>**kwargs</code>将参数传递给原函数。在函数执行结束后，返回函数的执行结果。<code>add</code>函数被<code>@decorator</code>装饰，因此在执行<code>add</code>函数时会先执行<code>decorator</code>函数。</p>
+<h2 id="装饰带返回值的函数"><a href="#装饰带返回值的函数" class="headerlink" title="装饰带返回值的函数"></a>装饰带返回值的函数</h2><p>要装饰带返回值的函数，需要在装饰器函数中定义一个内部函数，该函数调用原函数并返回执行结果。下面是一个示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">pythonCopy code<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">decorator</span>(<span class="hljs-params">func</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;decorator start&quot;</span>)<br>        result = func(*args, **kwargs)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;decorator end&quot;</span>)<br>        <span class="hljs-keyword">return</span> result<br>    <span class="hljs-keyword">return</span> wrapper<br><br><span class="hljs-meta">@decorator</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a, b</span>):<br>    <span class="hljs-keyword">return</span> a + b<br><br>result = add(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(result)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，<code>add</code>函数返回<code>a + b</code>的结果，在执行完<code>add</code>函数后，将结果赋给变量<code>result</code>。在装饰器<code>decorator</code>中，将原函数执行的结果存储在变量<code>result</code>中，并在执行完装饰器函数后返回该结果。</p>
+<h2 id="通用装饰器的定义"><a href="#通用装饰器的定义" class="headerlink" title="通用装饰器的定义"></a>通用装饰器的定义</h2><p>通用装饰器的定义通常采用闭包的形式，具体代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">my_decorator</span>(<span class="hljs-params">func</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        <span class="hljs-comment"># 执行一些前置操作</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Before the function is called.&quot;</span>)<br>        <span class="hljs-comment"># 调用函数或方法</span><br>        result = func(*args, **kwargs)<br>        <span class="hljs-comment"># 执行一些后置操作</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;After the function is called.&quot;</span>)<br>        <span class="hljs-keyword">return</span> result<br>    <span class="hljs-keyword">return</span> wrapper<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，<code>my_decorator</code> 是一个通用装饰器函数，它的参数 <code>func</code> 是一个被装饰的函数或方法。<code>wrapper</code> 是一个内部函数，它接收任意数量的位置参数和关键字参数，然后在调用被装饰的函数前后执行一些操作。</p>
+<p>当一个函数被装饰器装饰时，装饰器实际上会返回 <code>wrapper</code> 函数，而不是原来的函数。这意味着当我们调用被装饰的函数时，实际上是调用了 <code>wrapper</code> 函数，而且这个函数执行了前置操作、调用了原函数、执行了后置操作。</p>
+<p>下面是一个使用通用装饰器的示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@my_decorator</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">say_hello</span>(<span class="hljs-params">name</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello, &quot;</span> + name)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;done&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，我们定义了一个 <code>say_hello</code> 函数，并用 <code>my_decorator</code> 装饰了它。当我们调用 <code>say_hello</code> 函数时，实际上是调用了装饰器返回的 <code>wrapper</code> 函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">say_hello(<span class="hljs-string">&quot;Tom&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">Before the function <span class="hljs-keyword">is</span> called.<br>Hello, Tom<br>After the function <span class="hljs-keyword">is</span> called.<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，我们调用了 <code>say_hello</code> 函数，并将 “Tom” 作为参数传递给它。装饰器在调用 <code>say_hello</code> 函数前后分别打印了 “Before the function is called.” 和 “After the function is called.” 的信息，这说明装饰器在 <code>say_hello</code> 函数的前后执行了一些操作。最后，函数返回了 “done” 这个字符串。</p>
+<p>总的来说，通用装饰器是非常实用的，因为它可以应用于任何函数或方法，而不需要为每个函数都写一个专门的装饰器。同时，通用装饰器也可以方便地扩展和修改，以满足不同的需求。</p>
+<h2 id="带参数的装饰器"><a href="#带参数的装饰器" class="headerlink" title="带参数的装饰器"></a>带参数的装饰器</h2><p>在Python中，装饰器也可以接受参数。这种装饰器被称为带参数的装饰器。带参数的装饰器的定义方法与普通的装饰器有所不同，需要再次包装一层。</p>
+<p>下面我们通过示例来详细介绍下Python中的可以传递参数的装饰器。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">decorator_with_args</span>(<span class="hljs-params">arg1, arg2, arg3</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">decorator</span>(<span class="hljs-params">func</span>):<br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Decorator with arguments &#123;&#125;, &#123;&#125;, &#123;&#125; called&quot;</span>.<span class="hljs-built_in">format</span>(arg1, arg2, arg3))<br>            func(*args, **kwargs)<br>        <span class="hljs-keyword">return</span> wrapper<br>    <span class="hljs-keyword">return</span> decorator<br></code></pre></td></tr></table></figure>
+
+<p>上述代码定义了一个带有三个参数的装饰器<code>decorator_with_args</code>，该装饰器用于为函数添加额外的功能，包括在函数执行前后输出一些信息。</p>
+<p>现在我们来使用这个带有参数的装饰器来装饰一个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@decorator_with_args(<span class="hljs-params"><span class="hljs-string">&quot;arg1&quot;</span>, <span class="hljs-string">&quot;arg2&quot;</span>, <span class="hljs-string">&quot;arg3&quot;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">my_function</span>(<span class="hljs-params">arg</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;my_function called with argument:&quot;</span>, arg)<br></code></pre></td></tr></table></figure>
+
+<p>在这里，我们使用<code>@</code>符号将<code>my_function</code>函数应用到<code>decorator_with_args</code>装饰器上，并传入了三个参数：”arg1”、”arg2”和”arg3”。当我们调用<code>my_function</code>函数时，装饰器会先输出”Decorator with arguments arg1, arg2, arg3 called”，然后再执行函数体。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)</div>
+      <div>http://example.com/2020/03/22/高级Python编程技巧之装饰器：让你的代码更灵活、更强大(一)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年3月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/18/Python%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0%E6%89%A9%E5%B1%95%E3%80%81%E5%81%8F%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85%E5%87%BD%E6%95%B0/" title="Python内置函数扩展、偏函数和闭包函数">
+                        <span class="hidden-mobile">Python内置函数扩展、偏函数和闭包函数</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
