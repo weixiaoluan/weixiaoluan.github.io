@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python属性管理和多态1.私有属性和属性字典1.1私有属性Python中，私有属性指的是在类定义中以双下划线（“__”）开头的属性，这样的属性在类外部不能直接访问。Python并没有真正的私有属性，实际上它是通过一种名为“name mangling”的机制来实现的，即将属性名进行修改，以避免被意外访问。 当Python解释器遇到类定义中的以双下划线开头的属性时，会自动将属性名进行修改，使其变成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python属性管理和多态">
+<meta property="og:url" content="http://example.com/2020/04/12/Python%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86%E5%92%8C%E5%A4%9A%E6%80%81/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python属性管理和多态1.私有属性和属性字典1.1私有属性Python中，私有属性指的是在类定义中以双下划线（“__”）开头的属性，这样的属性在类外部不能直接访问。Python并没有真正的私有属性，实际上它是通过一种名为“name mangling”的机制来实现的，即将属性名进行修改，以避免被意外访问。 当Python解释器遇到类定义中的以双下划线开头的属性时，会自动将属性名进行修改，使其变成">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/shuxingguanli.jpg">
+<meta property="article:published_time" content="2020-04-12T12:17:15.000Z">
+<meta property="article:modified_time" content="2023-03-25T13:46:53.328Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta property="article:tag" content="python测试开发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/shuxingguanli.jpg">
+  
+  
+  
+  <title>Python属性管理和多态 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python属性管理和多态"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-04-12 20:17" pubdate>
+          2020年4月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          44 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python属性管理和多态</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python属性管理和多态"><a href="#Python属性管理和多态" class="headerlink" title="Python属性管理和多态"></a>Python属性管理和多态</h1><h2 id="1-私有属性和属性字典"><a href="#1-私有属性和属性字典" class="headerlink" title="1.私有属性和属性字典"></a>1.私有属性和属性字典</h2><h3 id="1-1私有属性"><a href="#1-1私有属性" class="headerlink" title="1.1私有属性"></a>1.1私有属性</h3><p>Python中，私有属性指的是在类定义中以双下划线（“__”）开头的属性，这样的属性在类外部不能直接访问。Python并没有真正的私有属性，实际上它是通过一种名为“name mangling”的机制来实现的，即将属性名进行修改，以避免被意外访问。</p>
+<p>当Python解释器遇到类定义中的以双下划线开头的属性时，会自动将属性名进行修改，使其变成“_classname__attribute”的形式。例如，在类定义中定义了一个私有属性“__private”，它的实际名称将变为“_classname__private”。这样，我们就可以在类的方法中访问这个属性，但在类外部无法直接访问。</p>
+<p>下面是一个示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, age</span>):<br>        self.name = name<br>        self.__age = age<br>        <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_age</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.__age<br><br>p = Person(<span class="hljs-string">&#x27;Alice&#x27;</span>, <span class="hljs-number">25</span>)<br><span class="hljs-built_in">print</span>(p.name)   <span class="hljs-comment"># Output: Alice</span><br><span class="hljs-built_in">print</span>(p.get_age())   <span class="hljs-comment"># Output: 25</span><br><span class="hljs-built_in">print</span>(p.__age)   <span class="hljs-comment"># Output: AttributeError: &#x27;Person&#x27; object has no attribute &#x27;__age&#x27;</span><br><span class="hljs-built_in">print</span>(p._Person__age)   <span class="hljs-comment"># Output: 25</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，我们定义了一个Person类，其中定义了一个私有属性“__age”。在类的构造函数中，我们初始化了这个属性。我们还定义了一个名为“get_age”的方法，它可以返回私有属性“__age”的值。</p>
+<p>在主程序中，我们创建了一个Person类的实例p，并尝试访问它的“name”和“__age”属性。由于“name”属性不是私有属性，因此我们可以直接访问它。但是，由于“__age”是私有属性，我们不能直接访问它。如果我们尝试这样做，Python会引发AttributeError异常。但是，我们可以使用“_Person__age”这样的名称来访问它。</p>
+<p>需要注意的是，尽管我们可以通过这种方式访问私有属性，但是这并不是Python语言官方建议的做法。在Python中，一般情况下应该尽量避免访问私有属性，而是通过公共接口访问属性值，这样可以使代码更加健壮和易于维护。</p>
+<h3 id="1-2-属性字典"><a href="#1-2-属性字典" class="headerlink" title="1.2 属性字典"></a>1.2 属性字典</h3><p>在Python中，每个对象都有一个字典，记录了它的属性和对应的值。这个字典被称为属性字典（<code>__dict__</code>），可以通过它来获取对象的属性。</p>
+<p>对于类来说，类的属性字典记录了类定义中的所有属性，包括类变量和方法。对于对象来说，属性字典记录了对象实例中定义的所有属性，包括实例变量和方法。属性字典是一个键值对的集合，键是属性名，值是属性值。</p>
+<p>在Python中，私有属性是指以双下划线开头但不以双下划线结尾的属性。Python中的私有属性并不是真正的私有，它们只是在属性名前面添加了一个下划线，告诉其他程序员这个属性不应该被直接访问。但是，Python中的属性字典可以访问到这些私有属性。</p>
+<p>下面是一个示例代码，演示如何使用属性字典获取类和对象的属性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span>:<br>    __private_attribute = <span class="hljs-string">&#x27;private&#x27;</span><br>    public_attribute = <span class="hljs-string">&#x27;public&#x27;</span><br>    <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.instance_attribute = <span class="hljs-string">&#x27;instance&#x27;</span><br>        <br>m = MyClass()<br><span class="hljs-built_in">print</span>(MyClass.__dict__)  <span class="hljs-comment"># 获取类的属性字典</span><br><span class="hljs-comment"># 输出：&#123;&#x27;__module__&#x27;: &#x27;__main__&#x27;, &#x27;_MyClass__private_attribute&#x27;: &#x27;private&#x27;, </span><br><span class="hljs-comment">#        &#x27;public_attribute&#x27;: &#x27;public&#x27;, &#x27;__init__&#x27;: &lt;function MyClass.__init__ at 0x7f9df32d4a60&gt;, </span><br><span class="hljs-comment">#        &#x27;__dict__&#x27;: &lt;attribute &#x27;__dict__&#x27; of &#x27;MyClass&#x27; objects&gt;, &#x27;__weakref__&#x27;: </span><br><span class="hljs-comment">#        &lt;attribute &#x27;__weakref__&#x27; of &#x27;MyClass&#x27; objects&gt;, &#x27;__doc__&#x27;: None&#125;</span><br><br><span class="hljs-built_in">print</span>(m.__dict__)  <span class="hljs-comment"># 获取对象的属性字典</span><br><span class="hljs-comment"># 输出：&#123;&#x27;instance_attribute&#x27;: &#x27;instance&#x27;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>从输出结果可以看出，属性字典中包含了类的所有属性，包括私有属性。同时，属性字典也可以用于获取对象实例中定义的属性。</p>
+<h2 id="2-限制类创建对象的实例属性"><a href="#2-限制类创建对象的实例属性" class="headerlink" title="2.限制类创建对象的实例属性"></a>2.限制类创建对象的实例属性</h2><p>Python中的__slots__属性可以用于限制对象的属性，使对象只能添加在__slots__列表中声明过的实例属性。它的作用主要有两个：</p>
+<ol>
+<li>阻止给对象创建属性字典__dict__，从而节省内存。</li>
+<li>限制对象的属性，避免程序员在不经意间给对象添加新的属性，从而增强程序的安全性和可维护性。</li>
+</ol>
+<p>在使用__slots__时，可以将它声明在类中，其值是一个包含字符串的列表，每个字符串代表一个属性名。在类的实例化过程中，只能为类中__slots__列表中声明的属性名赋值，否则会报AttributeError错误。下面是一个简单的示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span>:<br>    __slots__ = [<span class="hljs-string">&#x27;name&#x27;</span>, <span class="hljs-string">&#x27;age&#x27;</span>]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, age</span>):<br>        self.name = name<br>        self.age = age<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass2</span>:<br>    __slots__ = []<br><br>m = MyClass(<span class="hljs-string">&#x27;musen&#x27;</span>, <span class="hljs-number">18</span>)<br>m2 = MyClass(<span class="hljs-string">&#x27;musen1&#x27;</span>, <span class="hljs-number">118</span>)<br>mm = MyClass2()<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，类<code>MyClass</code>中声明了<code>__slots__</code>属性，包含了两个属性名<code>name</code>和<code>age</code>。类<code>MyClass2</code>中声明了一个空的<code>__slots__</code>属性。在实例化<code>MyClass</code>时，只能为<code>name</code>和<code>age</code>属性赋值。而在实例化<code>MyClass2</code>时，则不受任何限制。</p>
+<p>需要注意的是，<code>__slots__</code>属性只对当前类有效，不会影响父类或子类。另外，使用<code>__slots__</code>可能会对代码的扩展性和维护性带来一些影响，因为类的属性必须在<code>__slots__</code>中声明，所以如果需要添加新的属性，需要修改类的定义。</p>
+<h2 id="3-python中属性访问机制"><a href="#3-python中属性访问机制" class="headerlink" title="3.python中属性访问机制"></a>3.python中属性访问机制</h2><ol>
+<li>Python 中有四个魔术方法与对象的属性相关，分别是 <strong>getattribute</strong>、<strong>setattr</strong>、<strong>delattr</strong> 和 <strong>getattr</strong>；<br>getattribute、setattr、delattr 和 getattr；</li>
+<li><strong>getattribute</strong> 方法在对象访问属性时触发，它能够返回属性的值；</li>
+<li><strong>setattr</strong> 方法在对象设置属性时触发，它能够设置属性的值；</li>
+<li><strong>delattr</strong> 方法在删除对象属性时触发，它能够删除属性；</li>
+<li><strong>getattr</strong> 方法在对象获取不存在的属性时触发，它能够处理不存在的属性。</li>
+</ol>
+<p>以上这些魔术方法都可以重写，以实现对对象属性的特定操作。例如，在 <strong>setattr</strong> 方法中，可以对设置的属性值进行检查和过滤。</p>
+<p>代码中的实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyTest</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, age</span>):<br>        self.name = name<br>        self.age = age<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__getattribute__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        对象访问属性触发的魔术方法</span><br><span class="hljs-string">        :param item: 属性名</span><br><span class="hljs-string">        :return: 属性值</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>().__getattribute__(item)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__setattr__</span>(<span class="hljs-params">self, key, value</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        对象设置属性触发的魔术方法</span><br><span class="hljs-string">        :param key: 属性名</span><br><span class="hljs-string">        :param value: 属性值</span><br><span class="hljs-string">        :return:</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>().__setattr__(key, value)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__delattr__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        删除对象属性触发的魔术方法</span><br><span class="hljs-string">        :param item: 要删除的属性名</span><br><span class="hljs-string">        :return:</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>().__delattr__(item)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__getattr__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        对象获取属性，属性不存在时触发的魔术方法</span><br><span class="hljs-string">        :param item:</span><br><span class="hljs-string">        :return:</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-keyword">return</span><br><br>m = MyTest(<span class="hljs-string">&#x27;musen&#x27;</span>, <span class="hljs-number">18</span>)<br><br><span class="hljs-comment"># 动态设置属性</span><br><span class="hljs-built_in">setattr</span>(m, <span class="hljs-string">&#x27;python&#x27;</span>, <span class="hljs-number">100</span>)<br><span class="hljs-built_in">setattr</span>(m, <span class="hljs-string">&#x27;java&#x27;</span>, <span class="hljs-number">200</span>)<br><span class="hljs-built_in">print</span>(m.__dict__)<br><br><span class="hljs-comment"># 访问属性</span><br><span class="hljs-built_in">print</span>(m.name)  <span class="hljs-comment"># m.name  ===&gt; m.__getattribute__(&#x27;name&#x27;)</span><br><br><span class="hljs-comment"># 删除属性</span><br><span class="hljs-keyword">del</span> m.name<br><span class="hljs-built_in">print</span>(m.__dict__)<br><br><span class="hljs-comment"># 获取不存在的属性</span><br><span class="hljs-built_in">print</span>(m.py)<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-属性管理的案例"><a href="#4-属性管理的案例" class="headerlink" title="4.属性管理的案例"></a>4.属性管理的案例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyDemo</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__setattr__</span>(<span class="hljs-params">self, key, value</span>):<br>        <span class="hljs-keyword">if</span> key == <span class="hljs-string">&#x27;id&#x27;</span>:<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(value, <span class="hljs-built_in">int</span>) <span class="hljs-keyword">and</span> value &gt; <span class="hljs-number">0</span>:<br>                <span class="hljs-built_in">super</span>().__setattr__(key, value)<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-keyword">raise</span> AttributeError(<span class="hljs-string">&#x27;id属性只能设置为int类型，并且值大于0&#x27;</span>)<br>        <span class="hljs-keyword">elif</span> key == <span class="hljs-string">&#x27;datas&#x27;</span>:<br>            <span class="hljs-keyword">pass</span><br>        <span class="hljs-keyword">elif</span> key == <span class="hljs-string">&#x27;name&#x27;</span>:<br>            <span class="hljs-keyword">pass</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">super</span>().__setattr__(key, value)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__delattr__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-keyword">if</span> item == <span class="hljs-string">&#x27;id&#x27;</span> <span class="hljs-keyword">or</span> item == <span class="hljs-string">&#x27;datas&#x27;</span>:<br>            <span class="hljs-keyword">raise</span> AttributeError(<span class="hljs-string">&#x27;属性&#123;&#125;不能删除&#x27;</span>.<span class="hljs-built_in">format</span>(item))<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">super</span>().__delattr__(item)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__getattr__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-keyword">if</span> item == <span class="hljs-string">&#x27;name&#x27;</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;新用例&#x27;</span><br>        <span class="hljs-keyword">raise</span> AttributeError(<span class="hljs-string">&#x27;对象没有&#123;&#125;属性&#x27;</span>.<span class="hljs-built_in">format</span>(item))<br><br><br>m2 = MyDemo()<br><br>m2.<span class="hljs-built_in">id</span> = <span class="hljs-number">999</span><br>m2.datas = [<span class="hljs-number">11</span>, <span class="hljs-number">22</span>, <span class="hljs-number">33</span>]<br><br><span class="hljs-built_in">print</span>(m2.__dict__)<br><span class="hljs-built_in">print</span>(m2.name)<br></code></pre></td></tr></table></figure>
+
+<p>在Python中，我们可以使用__setattr__、__getattr__和__delattr__魔术方法来自定义类的属性设置、获取和删除操作。</p>
+<p>在上面的代码中，我们定义了一个MyDemo类，该类具有id、datas和name三个属性。在__setattr__方法中，我们对id属性的值进行了类型和值范围的限制，并且对datas和name属性不做限制。对于其他属性，我们调用了父类的__setattr__方法进行默认处理。</p>
+<p>在__delattr__方法中，我们限制了对id和datas属性的删除，并对其他属性调用了父类的__delattr__方法。</p>
+<p>在__getattr__方法中，如果获取的是name属性并且该属性没有值，则返回’新用例’，否则抛出AttributeError异常。</p>
+<p>总之，使用这些魔术方法，我们可以对类的属性进行更加精细的控制，从而确保数据的完整性和安全性</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+        <a href="/tags/python%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91/">#python测试开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python属性管理和多态</div>
+      <div>http://example.com/2020/04/12/Python属性管理和多态/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年4月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/17/Python%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E5%BE%81/" title="Python面向对象编程的三大特征">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python面向对象编程的三大特征</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/05/%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3Python%E4%B8%AD%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="深入了解Python中的魔术方法">
+                        <span class="hidden-mobile">深入了解Python中的魔术方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

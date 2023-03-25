@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python多线程编程入门指南：初步了解并行处理python的引用计数机制Python中的引用计数机制是Python用于管理内存的一种方式，也是Python最关键的对象管理机制之一。每个Python对象都具有一个引用计数器，用于记录当前有多少个变量或者对象引用了该对象，当该计数器变为0时，Python会自动将该对象从内存中删除，以释放内存空间。 引用计数机制的优点是，当一个对象不再被引用时，Pyt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python多线程编程入门指南：初步了解并行处理">
+<meta property="og:url" content="http://example.com/2020/05/01/Python%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%EF%BC%9A%E5%88%9D%E6%AD%A5%E4%BA%86%E8%A7%A3%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python多线程编程入门指南：初步了解并行处理python的引用计数机制Python中的引用计数机制是Python用于管理内存的一种方式，也是Python最关键的对象管理机制之一。每个Python对象都具有一个引用计数器，用于记录当前有多少个变量或者对象引用了该对象，当该计数器变为0时，Python会自动将该对象从内存中删除，以释放内存空间。 引用计数机制的优点是，当一个对象不再被引用时，Pyt">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/duoxiancheng.jpg">
+<meta property="article:published_time" content="2020-05-01T03:13:24.000Z">
+<meta property="article:modified_time" content="2023-03-25T14:43:39.115Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta property="article:tag" content="python测试开发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/duoxiancheng.jpg">
+  
+  
+  
+  <title>Python多线程编程入门指南：初步了解并行处理 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python多线程编程入门指南：初步了解并行处理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-05-01 11:13" pubdate>
+          2020年5月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          62 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python多线程编程入门指南：初步了解并行处理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python多线程编程入门指南：初步了解并行处理"><a href="#Python多线程编程入门指南：初步了解并行处理" class="headerlink" title="Python多线程编程入门指南：初步了解并行处理"></a>Python多线程编程入门指南：初步了解并行处理</h1><h2 id="python的引用计数机制"><a href="#python的引用计数机制" class="headerlink" title="python的引用计数机制"></a>python的引用计数机制</h2><p>Python中的引用计数机制是Python用于管理内存的一种方式，也是Python最关键的对象管理机制之一。每个Python对象都具有一个引用计数器，用于记录当前有多少个变量或者对象引用了该对象，当该计数器变为0时，Python会自动将该对象从内存中删除，以释放内存空间。</p>
+<p>引用计数机制的优点是，当一个对象不再被引用时，Python可以立即将其从内存中删除，而不必等到垃圾回收器运行。这可以有效地减少内存的占用和释放的频率，提高程序的性能和效率。</p>
+<p>在Python中，引用计数增加的情况有：</p>
+<ol>
+<li>创建对象，用变量接收：<code>name = &#39;123&#39;</code></li>
+<li>对象被其他变量引用：<code>name2 = name</code></li>
+<li>对象被其他对象引用（放入其他容器类型的数据中）：<code>li = [11, 22, name]</code></li>
+<li>当作为函数参数传入函数中时：<code>def func(n):print(n)func(name)</code></li>
+</ol>
+<p>引用计数减少的情况包括：</p>
+<ol>
+<li>变量被显式销毁：<code>del name</code></li>
+<li>引用对象的变量指向了其他对象（变量被重新赋了别的值）：<code>name2 = &#39;abc&#39;</code></li>
+<li>从其他对象（容器类型数据中）移除：<code>li.pop()</code></li>
+<li>函数执行完毕之后，内部作用域的变量会被销毁。</li>
+</ol>
+<p>除了引用计数机制，Python还使用了一些其他的机制来优化内存管理。例如，Python中有一个小整数池，其中包含了一些常用的整数（从-5到256）。如果程序中使用这些整数，Python会直接引用这些整数，而不是重新创建。此外，Python还有一个字符串驻留池机制，用于优化纯字符串的创建和管理，以及缓存机制，用于缓存常用的内置数据类型。这些机制都能够帮助Python有效地管理内存，提高程序的性能和效率。</p>
+<h2 id="python中垃圾回收机制"><a href="#python中垃圾回收机制" class="headerlink" title="python中垃圾回收机制"></a>python中垃圾回收机制</h2><p>Python的垃圾回收机制主要分为三个部分：引用计数、标记清除和分代回收。</p>
+<p>引用计数是Python最基础也是最重要的垃圾回收机制。在Python中，每个对象都会维护一个引用计数，当这个对象被创建时，引用计数为1；每当有一个新的变量引用这个对象，它的引用计数就会加1；当一个变量不再引用这个对象时，它的引用计数就会减1。当一个对象的引用计数为0时，说明没有任何变量引用它了，这时Python就会把它当作垃圾进行回收。通过引用计数机制，Python可以快速地回收不再使用的对象，释放内存。</p>
+<p>然而，引用计数机制可能会遇到循环引用的问题，即两个或多个对象之间互相引用，导致它们的引用计数不为0。为了解决这个问题，Python引入了标记清除机制。标记清除的原理是，从所有的根对象开始，遍历整个对象图，对所有可以访问到的对象进行标记，标记完成后，所有未标记的对象就是垃圾，可以被回收。标记清除虽然可以解决循环引用问题，但是它的效率不如引用计数高。</p>
+<p>为了兼顾引用计数的高效和标记清除的完整性，Python还引入了分代回收机制。分代回收的思想是，把所有对象分成三代，新创建的对象放在第一代，经过一定时间或经过一定次数的垃圾回收后依然存活的对象升级到第二代，以此类推。不同的代采用不同的垃圾回收策略，第一代使用引用计数和简单标记清除，第二代使用更复杂的标记清除和分代回收，第三代使用更复杂的标记清除和完整的分代回收。这样做的好处是，大多数对象都是短命的，只在第一代中存活，只有少数对象能够升级到第二代或第三代，这样就大大减少了垃圾回收的频率，提高了Python的性能。</p>
+<p>除了引用计数机制和垃圾回收机制外，Python还实现了一些优化机制，如小整数池和字符串驻留池。</p>
+<p>小整数池是Python对于范围在[-5, 256]的整数做了一个缓存，这些整数在程序中多次出现时，不会重新创建，而是直接引用缓存中的对象。这样可以节省内存空间，也能提高程序的执行效率。</p>
+<p>字符串驻留池则是对于纯字符组成的字符串做了一个缓存，这些字符串在程序中多次出现时，也不会重新创建，而是直接引用缓存中的对象。字符串驻留池的实现方式是，当程序中定义了一个字符串后，如果这个字符串是由一系列字符组成的，并且这个字符串的长度在一定范围内，Python会把这个字符串缓存起来，以便在程序中的其他位置引用相同的字符串时直接使用缓存中的对象。这种方式同样可以节省内存空间，提高程序的执行效率。</p>
+<p>此外，Python还实现了其他一些优化机制，如迭代器、生成器、装饰器等，这些机制可以使程序更加简洁、高效、易于维护。例如，迭代器可以让程序处理大量数据时不必一次性把数据全部加载到内存中，而是可以在需要时逐个取出数据，避免了内存占用过大的问题；生成器可以使程序更加高效地生成大量数据，减少内存的使用；装饰器可以让程序的功能更加灵活、可扩展，便于维护和管理。</p>
+<h2 id="并发编程和多任务"><a href="#并发编程和多任务" class="headerlink" title="并发编程和多任务"></a>并发编程和多任务</h2><p>在Python中，多任务、并发和并行是三个重要的概念。</p>
+<p>多任务是指同时运行多个任务，任务可以是多个线程或进程。在多任务环境下，每个任务都是独立运行的，但它们共享计算机的资源。在Python中，我们可以通过多线程、多进程或协程来实现多任务。</p>
+<p>并发是指同时处理多个任务，但是它并不是真正的同时执行。在并发模式下，任务会轮流进行，使得它们看起来像是同时执行。在Python中，我们可以使用多线程、协程或异步IO来实现并发。</p>
+<p>并行是指同时执行多个任务，也就是说多个任务真正的同时执行。在并行模式下，每个任务都有自己的处理器，可以并行执行。在Python中，我们可以通过多进程、协程或异步IO来实现并行。</p>
+<p>需要注意的是，并发和并行是不同的概念。并发可以在单核处理器上实现，通过不断地切换任务达到看似同时执行的效果。而并行则需要多核处理器的支持，可以真正地同时执行多个任务。</p>
+<h2 id="认识多线程"><a href="#认识多线程" class="headerlink" title="认识多线程"></a>认识多线程</h2><ol>
+<li><p>什么是多线程？</p>
+<ul>
+<li>线程是操作系统能够进行运算调度的最小单位，它被包含在进程之中，是进程中的实际运作单位。</li>
+<li>多线程就是在一个程序中同时运行多个线程完成不同的任务，每个线程都可以独立运行，并且共享程序的内存空间。</li>
+</ul>
+</li>
+<li><p>为什么需要多线程？</p>
+<ul>
+<li>多线程可以提高程序的运行效率，特别是在多核 CPU 的计算机上。</li>
+<li>多线程可以实现并发编程，使得程序能够同时处理多个任务，提高了程序的响应速度。</li>
+</ul>
+</li>
+<li><p>Python 中如何实现多线程？ </p>
+<ul>
+<li><p>Python 中可以使用内置的 threading 模块来实现多线程。</p>
+</li>
+<li><p>创建线程：通过 Thread 类来创建线程对象。</p>
+</li>
+<li><p>启动线程：通过 start() 方法来启动线程。</p>
+</li>
+<li><p>在子线程中执行任务：通过将需要执行的任务封装成一个函数，并将函数名作为 target 参数传入 Thread 类的构造函数中。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">6</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务2执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><span class="hljs-comment"># 创建线程</span><br>t1 = Thread(target=work1)<br>t2 = Thread(target=work2)<br><br><span class="hljs-comment"># 启动线程</span><br>t1.start()<br>t2.start()<br></code></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>代码演示</p>
+<ul>
+<li>上述代码通过创建两个线程来模拟多任务的场景，其中 t1 线程执行 work1 函数，t2 线程执行 work2 函数。</li>
+<li>在执行 t1.start() 和 t2.start() 之后，t1 和 t2 线程会同时启动，并且分别执行 work1 和 work2 函数中的代码。</li>
+<li>由于 t1 和 t2 线程是并发执行的，因此在控制台中会看到两个函数的输出交替出现，这就实现了多任务的效果。</li>
+</ul>
+</li>
+</ol>
+<h2 id="线程模块的使用"><a href="#线程模块的使用" class="headerlink" title="线程模块的使用"></a>线程模块的使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">import time</span><br><span class="hljs-string">from threading import Thread</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">def work1(name):</span><br><span class="hljs-string">    for i in range(1, 6):</span><br><span class="hljs-string">        time.sleep(1)</span><br><span class="hljs-string">        print(&quot;&#123;&#125;-任务1执行的第&#123;&#125;秒&quot;.format(name, i))</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">def work2(name):</span><br><span class="hljs-string">    for i in range(1, 7):</span><br><span class="hljs-string">        time.sleep(1)</span><br><span class="hljs-string">        print(&quot;&#123;&#125;-任务2执行的第&#123;&#125;秒&quot;.format(name, i))</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br>Thread创建线程的参数：<br>    target：指定线程执行的任务函数<br>    daemon：是否设置为守护线程（默认是<span class="hljs-literal">False</span>）,【守护线程：主线程执行结束后，自动退出】<br>    name:设置线程名<br>    args：给任务函数传递位置参数（元组）<br>    kwargs:给任务函数传递关键字参数(字典)<br>    group：不需要传<br><br>线程对像的方法：<br>    start():启动线程的<br>    join()：设置主线程等待子线程执行的时间（默认等待执行完毕）<br>    run():线程中执行任务函数的方法<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">if __name__ == &#x27;__main__&#x27;:</span><br><span class="hljs-string">    s_time = time.time()</span><br><span class="hljs-string">    # 创建子线程</span><br><span class="hljs-string">    t1 = Thread(target=work1, args=(&#x27;张三&#x27;,))</span><br><span class="hljs-string">    t2 = Thread(target=work2, kwargs=&#123;&#x27;name&#x27;: &quot;李四&quot;&#125;)</span><br><span class="hljs-string">    # 启动线程</span><br><span class="hljs-string">    t1.start()</span><br><span class="hljs-string">    t2.start()</span><br><span class="hljs-string">    t1.run()</span><br><span class="hljs-string"></span><br><span class="hljs-string">    # 线程对象的join方法：设置主线程等待的时间</span><br><span class="hljs-string">    # t1.join(1)</span><br><span class="hljs-string">    # t2.join()</span><br><span class="hljs-string">    # 注意点：默认情况下，主线程不会等待子线程</span><br><span class="hljs-string">    e_time = time.time()</span><br><span class="hljs-string">    print(&quot;两个任务执行的总时间:&quot;, e_time - s_time)</span><br><span class="hljs-string"></span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="自定义线程类"><a href="#自定义线程类" class="headerlink" title="自定义线程类"></a>自定义线程类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">自定义线程类的适用场景：</span><br><span class="hljs-string">    创建一个或多个执行特定任务的线程，可以再自定义线程类的run方法中，写任务执行的逻辑代码</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyTread</span>(<span class="hljs-title class_ inherited__">Thread</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;用来生成测试数据&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&#123;&#125;-任务执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(self.name, i))<br><br><br>t = MyTread(name=<span class="hljs-string">&#x27;musen&#x27;</span>)<br>t.start()<br><br>t2 = MyTread(name=<span class="hljs-string">&#x27;yuze&#x27;</span>)<br>t2.start()<br><br>t.run()<br><br>t2.run()<br></code></pre></td></tr></table></figure>
+
+<h2 id="多线程之间资源竞争的问题"><a href="#多线程之间资源竞争的问题" class="headerlink" title="多线程之间资源竞争的问题"></a>多线程之间资源竞争的问题</h2><p>python中多线程是共享全局变量的（会出现资源竞争）</p>
+<p>Cpython解释器中由于全局解释器锁(GIL)的存在，在同一时间，多个线程无法真正的一起执行(不可能出现并行)</p>
+<p>python的GIL锁：<br>    1、线程只有获取全局解释器锁才能执行，执行到【线程切换的情况】会释放全局解释器锁<br>    线程切换的两种情况：<br>        1、线程执行遇到耗时等待（IO[input output]操作）<br>        2、执行时间达到指定的阈值(0.005秒)<br>            import sys<br>            print(sys.getswitchinterval())</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python">number = <span class="hljs-number">0</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">global</span> number<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100000</span>):<br>        number += <span class="hljs-number">1</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work1：&quot;</span>, number)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">global</span> number<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100000</span>):<br>        number += <span class="hljs-number">1</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work2：&quot;</span>, number)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><br>    <span class="hljs-comment"># 创建线程</span><br>    t1 = Thread(target=work1)<br>    t2 = Thread(target=work2)<br><br>    <span class="hljs-comment"># 启动线程</span><br>    t1.start()<br>    t2.start()<br><br>    <span class="hljs-comment"># 等待子线程执行完毕</span><br>    t1.join()<br>    t2.join()<br><br>    <span class="hljs-comment"># 输出结果</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;主线程：&quot;</span>, number)<br></code></pre></td></tr></table></figure>
+
+<p>这段代码演示了Python多线程中全局变量的问题。在两个线程<code>work1</code>和<code>work2</code>中都对全局变量<code>number</code>进行了100000次的加1操作。当主线程在两个子线程执行完毕后打印全局变量<code>number</code>时，由于两个子线程同时修改了<code>number</code>变量，所以可能得到意料之外的结果。</p>
+<p>为了解决这个问题，可以使用锁机制来保证同一时间只有一个线程能够修改<code>number</code>变量。Python中提供了一个内置的<code>Lock</code>对象，可以使用它来实现线程同步，保证线程安全。下面是一份使用<code>Lock</code>对象解决上述问题的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python">number = <span class="hljs-number">0</span><br>lock = Lock()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">global</span> number<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100000</span>):<br>        <span class="hljs-keyword">with</span> lock:<br>            number += <span class="hljs-number">1</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work1：&quot;</span>, number)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">global</span> number<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100000</span>):<br>        <span class="hljs-keyword">with</span> lock:<br>            number += <span class="hljs-number">1</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work2：&quot;</span>, number)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread, Lock<br><br>    <span class="hljs-comment"># 创建线程</span><br>    t1 = Thread(target=work1)<br>    t2 = Thread(target=work2)<br><br>    <span class="hljs-comment"># 启动线程</span><br>    t1.start()<br>    t2.start()<br><br>    <span class="hljs-comment"># 等待子线程执行完毕</span><br>    t1.join()<br>    t2.join()<br><br>    <span class="hljs-comment"># 输出结果</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;主线程：&quot;</span>, number)<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，我们首先创建了一个<code>Lock</code>对象，并在<code>work1</code>和<code>work2</code>函数中使用了<code>with lock</code>语句块，确保每次只有一个线程能够执行对<code>number</code>变量的修改。这样，当两个子线程完成了对<code>number</code>的所有修改后，主线程打印<code>number</code>的值就能得到正确的结果。</p>
+<p>需要注意的是，在使用锁的过程中，需要避免死锁问题的发生，即两个线程相互等待对方释放锁而无法继续执行的情况。因此，在使用锁时需要遵循一些规则，如尽量避免使用嵌套锁、避免长时间持有锁等。</p>
+<h2 id="线程模块中的Luck"><a href="#线程模块中的Luck" class="headerlink" title="线程模块中的Luck"></a>线程模块中的Luck</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Lock, Thread<br><br>number = <span class="hljs-number">0</span><br><br>使用Lock创建一把锁：锁的两种状态（上锁，未上锁）<br><br>loc = Lock()<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">注意点：</span><br><span class="hljs-string">    为了解决多线程操作共同的全局变量，出现资源竞争的情况，可以通过锁把</span><br><span class="hljs-string">    关键的代码【对全局资源修改的代码】锁起来，确保同一时间只有一个线程执行【对全局资源修改的代码】</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">global</span> number<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500000</span>):<br>        <span class="hljs-comment"># 上锁</span><br>        loc.acquire()<br>        number += <span class="hljs-number">1</span><br>        <span class="hljs-comment"># 释放锁</span><br>        loc.release()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work1：&quot;</span>, number)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">global</span> number<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500000</span>):<br>        <span class="hljs-comment"># 上锁</span><br>        loc.acquire()<br>        number += <span class="hljs-number">1</span><br>        <span class="hljs-comment"># 释放锁</span><br>        loc.release()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work2：&quot;</span>, number)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br><br>创建线程<br><br>​    t1 = Thread(target=work1)<br>​    t2 = Thread(target=work2)<br><br>启动线程<br><br>​    t1.start()<br>​    t2.start()<br>​    t1.join()<br>​    t2.join()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;主线程：&quot;</span>, number)<br></code></pre></td></tr></table></figure>
+
+<p>本段代码演示了在多线程程序中如何使用 Lock（锁） 解决共享全局变量出现资源竞争的问题。</p>
+<p>首先，通过 from threading import Lock 引入了 Lock 类。然后，创建了一把锁：loc &#x3D; Lock()。</p>
+<p>在 work1 和 work2 函数中对全局变量 number 进行了 500000 次的自增操作。为了避免出现资源竞争，上锁和释放锁的操作必须要成对出现，保证同一时间只有一个线程执行修改共享全局变量的代码段。具体来说，在执行 number +&#x3D; 1 前，先调用 loc.acquire() 上锁；在执行完后，再调用 loc.release() 释放锁。这样可以保证多线程修改同一个全局变量时，不会出现数据错误。</p>
+<p>最后，在主线程中输出了全局变量 number 的值。</p>
+<p>在使用 Lock 的时候，需要注意以下几点：</p>
+<ol>
+<li>Lock 对象创建后处于未上锁状态，即 Lock.acquire() 返回值为 True。</li>
+<li>多个线程可以同时调用 Lock.acquire() 上锁，但只有一个线程可以成功获取锁，其他线程会阻塞直到锁被释放。</li>
+<li>可以通过调用 Lock.release() 释放锁，使其他线程可以获取到锁。</li>
+<li>上锁和释放锁的操作必须要成对出现，否则会出现死锁等问题。</li>
+<li>锁的过度使用会降低程序的性能。因此，在多线程编程时，应该尽量减少锁的使用。</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+        <a href="/tags/python%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91/">#python测试开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python多线程编程入门指南：初步了解并行处理</div>
+      <div>http://example.com/2020/05/01/Python多线程编程入门指南：初步了解并行处理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年5月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/23/%E8%AE%A4%E8%AF%86%E5%85%83%E7%B1%BB/" title="Python元类">
+                        <span class="hidden-mobile">Python元类</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
