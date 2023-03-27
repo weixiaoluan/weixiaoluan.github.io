@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python协程和pytest插件协程“””“””协程：存在于线程之中，又称之为微线程，或者纤程 需求：单线程如何实现多任务？    通过协程： “”” 123456789101112131415161718import timedef work1():    for i in range(1, 7):        print(&quot;任务1执行的第&amp;#123;&amp;#125;秒&quot;.f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python协程和pytest插件">
+<meta property="og:url" content="http://example.com/2020/05/25/Python%E5%8D%8F%E7%A8%8B%E5%92%8Cpytest%E6%8F%92%E4%BB%B6/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python协程和pytest插件协程“””“””协程：存在于线程之中，又称之为微线程，或者纤程 需求：单线程如何实现多任务？    通过协程： “”” 123456789101112131415161718import timedef work1():    for i in range(1, 7):        print(&quot;任务1执行的第&amp;#123;&amp;#125;秒&quot;.f">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/xiecheng.jpg">
+<meta property="article:published_time" content="2020-05-25T14:31:11.000Z">
+<meta property="article:modified_time" content="2023-03-27T15:12:31.717Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta property="article:tag" content="python测试开发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/xiecheng.jpg">
+  
+  
+  
+  <title>Python协程和pytest插件 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python协程和pytest插件"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-05-25 22:31" pubdate>
+          2020年5月25日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          60 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python协程和pytest插件</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python协程和pytest插件"><a href="#Python协程和pytest插件" class="headerlink" title="Python协程和pytest插件"></a>Python协程和pytest插件</h1><h2 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h2><p>“””<br>“””<br>协程：存在于线程之中，又称之为微线程，或者纤程</p>
+<p>需求：单线程如何实现多任务？<br>    通过协程：</p>
+<p>“””</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br>        <span class="hljs-keyword">yield</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务2执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br>        <span class="hljs-keyword">yield</span><br><br>g1 = work1()<br>g2 = work2()<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">6</span>):<br>    <span class="hljs-built_in">next</span>(g1)<br>    <span class="hljs-built_in">next</span>(g2)<br></code></pre></td></tr></table></figure>
+
+<p>协程是一种比线程更加轻量级的并发编程方式，其内部的执行可以在一个线程中完成，通过协程的切换来实现并发。Python提供了内置的asyncio模块来支持协程编程。</p>
+<p>协程的特点：</p>
+<ol>
+<li>协程的调度是由程序员控制的，不像线程由操作系统控制。</li>
+<li>协程不会切换到内核态，所以运行速度比线程快。</li>
+<li>协程是单线程内实现的并发，可以使用更少的资源实现更高的并发性。</li>
+</ol>
+<p>协程的关键是yield关键字，可以将协程挂起，并将控制权还给调用者。在Python中使用async关键字定义一个协程函数，函数内使用await关键字来挂起协程。</p>
+<p>下面是一个简单的协程示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">print_nums</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        <span class="hljs-built_in">print</span>(i)<br>        <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">print_letters</span>():<br>    <span class="hljs-keyword">for</span> letter <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>]:<br>        <span class="hljs-built_in">print</span>(letter)<br>        <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    task1 = asyncio.create_task(print_nums())<br>    task2 = asyncio.create_task(print_letters())<br>    <span class="hljs-keyword">await</span> task1<br>    <span class="hljs-keyword">await</span> task2<br><br>asyncio.run(main())<br></code></pre></td></tr></table></figure>
+
+<p>这个例子中，我们定义了两个协程函数print_nums和print_letters，它们分别打印数字和字母，并在每次打印后暂停1秒。我们通过asyncio.create_task来创建两个任务，并通过await关键字等待它们完成，最后使用asyncio.run来运行整个程序。</p>
+<p>Python的asyncio模块还提供了一些基于事件循环的协程API，例如asyncio.sleep、asyncio.wait等等，这些API可以让协程更加方便地进行事件处理、任务调度等操作。</p>
+<h2 id="python中原生协程函数的定义"><a href="#python中原生协程函数的定义" class="headerlink" title="python中原生协程函数的定义"></a>python中原生协程函数的定义</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">import asyncio</span><br><span class="hljs-string"></span><br><span class="hljs-string"># ======================python中原生协程函数的定义=================</span><br><span class="hljs-string"></span><br><span class="hljs-string"># async  await    asyncio</span><br><span class="hljs-string"></span><br><span class="hljs-string"># # python3.4中协程函数的定义</span><br><span class="hljs-string"></span><br><span class="hljs-string"># @asyncio.coroutine</span><br><span class="hljs-string"></span><br><span class="hljs-string"># def work():</span><br><span class="hljs-string"></span><br><span class="hljs-string">#     pass</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string"># python版本要大于3.5才支持一下语法</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 定义原生的协程函数（异步函数）</span><br><span class="hljs-string"></span><br><span class="hljs-string">async def work1():</span><br><span class="hljs-string">    for i in range(1, 7):</span><br><span class="hljs-string">        print(&quot;任务1执行的第&#123;&#125;秒&quot;.format(i))</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">async def work2():</span><br><span class="hljs-string">    for i in range(1, 7):</span><br><span class="hljs-string">        print(&quot;任务1执行的第&#123;&#125;秒&quot;.format(i))</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string"># 调用协程函数，返回的结果是一个协程对象</span><br><span class="hljs-string"></span><br><span class="hljs-string">c1 = work1()</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string"># =====================协程的执行机制======================</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 执行协程</span><br><span class="hljs-string"></span><br><span class="hljs-string">asyncio.run(c1)</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 事件循环的概念</span><br><span class="hljs-string"></span><br><span class="hljs-string"># # 创建一个事件循环</span><br><span class="hljs-string"></span><br><span class="hljs-string"># loop = asyncio.get_event_loop()</span><br><span class="hljs-string"></span><br><span class="hljs-string"># # 将协程对象，加入到事件循环执行的任务列表</span><br><span class="hljs-string"></span><br><span class="hljs-string"># loop.run_until_complete(c1)</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="python中原生协程实现多任务"><a href="#python中原生协程实现多任务" class="headerlink" title="python中原生协程实现多任务"></a>python中原生协程实现多任务</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><br><br><span class="hljs-comment"># python版本要大于3.5才支持一下语法</span><br><br><span class="hljs-comment"># 定义原生的协程函数（异步函数）</span><br><br><span class="hljs-comment"># async def work1():</span><br><br><span class="hljs-comment">#     for i in range(1, 7):</span><br><br><span class="hljs-comment">#         print(&quot;任务1执行的第&#123;&#125;秒&quot;.format(i))</span><br><br><span class="hljs-comment">#         await asyncio.sleep(1)</span><br><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#</span><br><br><span class="hljs-comment"># async def work2():</span><br><br><span class="hljs-comment">#     for i in range(1, 7):</span><br><br><span class="hljs-comment">#         print(&quot;任务2执行的第&#123;&#125;秒&quot;.format(i))</span><br><br><span class="hljs-comment">#         await asyncio.sleep(1)</span><br><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment">#</span><br><br><span class="hljs-comment"># # 如何同时执行多个协程函数</span><br><br><span class="hljs-comment"># asyncio.run(asyncio.wait([work1(), work2()]))</span><br><br><br><span class="hljs-comment"># =================关于任务=========================================</span><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br>        <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;python&#x27;</span><br><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务2执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br>        <span class="hljs-comment"># await asyncio.sleep(1)</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;java&#x27;</span><br><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    t1 = asyncio.create_task(work1())<br>    t2 = asyncio.create_task(work2())<br>    res1 = <span class="hljs-keyword">await</span> t1<br>    res2 = <span class="hljs-keyword">await</span> t2<br>    <span class="hljs-built_in">print</span>(res1)<br>    <span class="hljs-built_in">print</span>(res2)<br><br><br>asyncio.run(main())<br><br><span class="hljs-comment"># =============================await=====================</span><br><br><span class="hljs-comment"># await只能用在async定义的函数中，等待</span><br><br><span class="hljs-comment"># await后面只能跟(可等待对象),协程对象，任务，Future对象</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="gevent模块创建协程"><a href="#gevent模块创建协程" class="headerlink" title="gevent模块创建协程"></a>gevent模块创建协程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> gevent<br><span class="hljs-keyword">from</span> gevent <span class="hljs-keyword">import</span> monkey<br><br>monkey.patch_all()<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">6</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务2执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-comment"># # 创建协程</span><br>    <span class="hljs-comment"># c1 = gevent.Greenlet(work1)</span><br>    <span class="hljs-comment"># c2 = gevent.Greenlet(work2)</span><br>    <span class="hljs-comment"># # 启动协程</span><br>    <span class="hljs-comment"># c1.start()</span><br>    <span class="hljs-comment"># c2.start()</span><br>    <span class="hljs-comment"># # 等待协程执行完毕</span><br>    <span class="hljs-comment"># c1.join()</span><br>    <span class="hljs-comment"># c2.join()</span><br>    <span class="hljs-comment"># ==============================================</span><br>    c1 = gevent.spawn(work1)<br>    c2 = gevent.spawn(work2)<br><br><span class="hljs-comment"># c1.join()</span><br><br><span class="hljs-comment"># c2.join()</span><br><br><span class="hljs-comment"># 等待所有协程对象执行结束</span><br><br>gevent.joinall([c1, c2])<br></code></pre></td></tr></table></figure>
+
+<h2 id="协程任务的参数传递和返回值接收"><a href="#协程任务的参数传递和返回值接收" class="headerlink" title="协程任务的参数传递和返回值接收"></a>协程任务的参数传递和返回值接收</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> gevent<br><span class="hljs-keyword">from</span> gevent <span class="hljs-keyword">import</span> monkey<br><br>monkey.patch_all()<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>(<span class="hljs-params">name, age</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;age:&#123;&#125;---&#123;&#125;任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(age, name, i))<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#123;&#125;--&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(name, age)<br><br><span class="hljs-comment"># 回调函数</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">musen</span>(<span class="hljs-params">res</span>):<br>    <span class="hljs-built_in">print</span>(res.get())<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br><br><span class="hljs-comment"># cs = [gevent.spawn(work1, &#x27;张三&#x27;, i) for i in range(10)]</span><br><br><span class="hljs-comment"># gevent.joinall(cs)</span><br><br><span class="hljs-comment"># ==================获取协程执行完任务函数的返回值=================</span><br><br><span class="hljs-comment"># c = gevent.spawn(work1, &#x27;张三&#x27;, 18)</span><br><br><span class="hljs-comment"># # 获取返回结果</span><br><br><span class="hljs-comment"># res = c.get()</span><br><br><span class="hljs-comment"># # 打印结果</span><br><br><span class="hljs-comment"># print(res)</span><br><br><span class="hljs-comment"># cs = [gevent.spawn(work1, &#x27;张三&#x27;, i) for i in range(10)]</span><br><br><span class="hljs-comment"># res = gevent.joinall(cs)</span><br><br><span class="hljs-comment"># # 获取所以的协程任务执行的结果</span><br><br><span class="hljs-comment"># result = [i.get() for i in cs]</span><br><br><span class="hljs-comment"># print(result)</span><br><br><span class="hljs-comment"># ===============给任务设置回调函数====================</span><br><br>c = gevent.spawn(work1, <span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-number">18</span>)<br><br><span class="hljs-comment"># 设置回调函数</span><br><br>c.link(musen)<br><br><span class="hljs-comment"># 等待协程执行完毕</span><br><br>c.join()<br></code></pre></td></tr></table></figure>
+
+<h2 id="进程、线程、协程对比"><a href="#进程、线程、协程对比" class="headerlink" title="进程、线程、协程对比"></a>进程、线程、协程对比</h2><p>“””<br>1.进程是资源分配的单位<br>2. 线程是操作系统调度的单位<br>3.协程存在于线程之中，本质上就是一个特定情况下可以切换的特殊的函数。<br>4. 进程切由于资源是独立的，每次切换的资源很大，耗时更长<br>5. 线程的切换涉及到<strong>用户空间和内核空间的切换</strong>，需要操作系统调度，还有线程私有的栈和寄存器等 效率一般。<br>6. 协程切换任务，只设及到CUP上下文的切换，资源很小，耗时几乎可以忽略不计<br>7. 多进程、多线程根据cpu核数不一样可能是并行的，但是协程是在一个线程中 所以是并发<br>8. 注意点：python中的线程由于GIL锁的的存在，并不能够实现并行，要充分利用多核CUP还是需要使用进程来做。</p>
+<ul>
+<li><h5 id="什么场景适合用进程？"><a href="#什么场景适合用进程？" class="headerlink" title="什么场景适合用进程？"></a>什么场景适合用进程？</h5><h6 id="计算密集型的任务-比如：大规模的数据计算和处理"><a href="#计算密集型的任务-比如：大规模的数据计算和处理" class="headerlink" title="计算密集型的任务(比如：大规模的数据计算和处理)"></a>计算密集型的任务(比如：大规模的数据计算和处理)</h6></li>
+<li><h5 id="什么场景适合用线程？"><a href="#什么场景适合用线程？" class="headerlink" title="什么场景适合用线程？"></a>什么场景适合用线程？</h5><h6 id="IO密集型的任务-比如：数据读取和写入多，网络请求多的任务"><a href="#IO密集型的任务-比如：数据读取和写入多，网络请求多的任务" class="headerlink" title="IO密集型的任务(比如：数据读取和写入多，网络请求多的任务)"></a>IO密集型的任务(比如：数据读取和写入多，网络请求多的任务)</h6></li>
+<li><h5 id="什么场景适合用协程？"><a href="#什么场景适合用协程？" class="headerlink" title="什么场景适合用协程？"></a>什么场景适合用协程？</h5><h6 id="IO密集型项目切要求高并发-比如：用locust-搞压测里面就是用的协程-实际上真实项目中对应高并发的业务并不会选择使用python语言。"><a href="#IO密集型项目切要求高并发-比如：用locust-搞压测里面就是用的协程-实际上真实项目中对应高并发的业务并不会选择使用python语言。" class="headerlink" title="IO密集型项目切要求高并发( 比如：用locust 搞压测里面就是用的协程) ,实际上真实项目中对应高并发的业务并不会选择使用python语言。"></a>IO密集型项目切要求高并发( 比如：用locust 搞压测里面就是用的协程) ,实际上真实项目中对应高并发的业务并不会选择使用python语言。</h6></li>
+</ul>
+<p>“””</p>
+<p>Python中的线程、进程和协程是用于实现多任务的三种不同方式，它们在实现方式、使用场景、性能等方面有所不同。</p>
+<ol>
+<li>实现方式</li>
+</ol>
+<ul>
+<li>线程：由操作系统调度，在同一进程内共享进程资源，每个线程拥有自己的栈和局部变量。</li>
+<li>进程：由操作系统调度，拥有自己独立的地址空间、内存等资源，进程之间互相独立。</li>
+<li>协程：是用户级别的线程，由程序员自己编写调度逻辑，通过yield和send等方式实现多任务切换。</li>
+</ul>
+<ol>
+<li>使用场景</li>
+</ol>
+<ul>
+<li>线程：适用于I&#x2F;O密集型任务，如网络请求、文件读写等操作，可以提高CPU利用率，但是因为多线程共享进程资源，所以需要注意线程安全问题。</li>
+<li>进程：适用于CPU密集型任务，如图像处理、科学计算等操作，可以提高CPU利用率，但是因为进程之间相互独立，所以需要通过IPC进行通信。</li>
+<li>协程：适用于I&#x2F;O密集型任务，如网络请求、文件读写等操作，因为协程的切换开销比线程和进程小，可以提高性能。</li>
+</ul>
+<ol>
+<li>性能</li>
+</ol>
+<ul>
+<li>线程：由于线程的切换需要通过操作系统进行调度，所以线程切换的开销相对较大，但是因为多个线程共享进程资源，可以在一定程度上提高CPU利用率。</li>
+<li>进程：进程之间相互独立，通信需要通过IPC进行，开销较大，但是因为可以利用多核CPU的优势，所以在CPU密集型任务中表现较好。</li>
+<li>协程：协程的切换开销比线程和进程小，因为不需要进入操作系统内核态，所以性能相对较好，特别是在I&#x2F;O密集型任务中表现较好。</li>
+</ul>
+<p>总体来说，线程、进程和协程各有优缺点，在不同场景下选择适合的方式可以提高程序的性能和效率。</p>
+<h2 id="pytest插件机制"><a href="#pytest插件机制" class="headerlink" title="pytest插件机制"></a>pytest插件机制</h2><p>pytest是一个功能强大的Python测试框架，支持各种类型的测试，包括单元测试、功能测试、性能测试等。pytest具有丰富的插件机制，使得用户可以轻松地扩展pytest的功能。</p>
+<p>pytest的插件机制基于setuptools的entry points机制，用户可以在项目中通过编写setuptools的entry points，将自己编写的插件添加到pytest的插件系统中。pytest中的插件可以分为hook函数和fixture函数两种类型。</p>
+<ul>
+<li>Hook函数：hook函数是pytest中的扩展点，可以在测试执行的不同阶段进行扩展和干预。例如，可以在测试运行前后，或者在测试失败时执行特定的操作。pytest提供了大量的hook函数，用户可以根据需要选择并实现相应的hook函数来扩展pytest的功能。</li>
+<li>Fixture函数：fixture函数是pytest中的一种特殊的hook函数，用于提供测试所需的数据或对象。pytest中的fixture函数可以看做是一种数据提供器，可以提供各种类型的数据，包括简单的字符串、整数，以及复杂的对象和函数等。用户可以通过定义fixture函数，来提供测试所需的各种数据和对象。 治具函</li>
+</ul>
+<p>通过扩展pytest的插件机制，用户可以实现各种自定义的测试扩展，例如自定义的断言函数、自定义的测试报告、自定义的命令行选项等。同时，pytest的插件机制也为第三方开发者提供了一个良好的扩展平台，使得开发者可以基于pytest开发各种自定义的插件，以满足不同用户的需求。</p>
+<h2 id="钩子函数"><a href="#钩子函数" class="headerlink" title="钩子函数"></a>钩子函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestRunner</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">preform</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;-----start------&#x27;</span>)<br>        self.run_case_func()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;-----run_case_func------&#x27;</span>)<br>        self.send_request()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;-----send_request------&#x27;</span>)<br>        self.asserttion()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;-----asserttion------&#x27;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run_case_func</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-keyword">pass</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">send_request</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-keyword">pass</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">asserttion</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MTRunner</span>(<span class="hljs-title class_ inherited__">TestRunner</span>):<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run_case_func</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;----钩子函数run_case_func---&quot;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">asserttion</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;----asserttion钩子函数的调用&#x27;</span>)<br><br><br>s = MTRunner()<br><br>s.preform()<br></code></pre></td></tr></table></figure>
+
+<p>Python中的钩子函数指的是在特定事件发生时被调用的函数。它们是一种在代码执行期间自动调用的函数，可以用于修改程序的行为，例如在特定事件发生时添加额外的行为或修改已有行为。</p>
+<p>在Python中，有多个标准库和框架支持钩子函数的使用，例如：</p>
+<ol>
+<li>sys.excepthook: 当未捕获的异常发生时，会调用该函数处理异常。可以通过重载该函数来修改异常处理的行为。</li>
+<li>unittest.TestResult.addSuccess、addFailure、addError等方法：这些方法在unittest执行测试时发生并调用，可以用于在测试成功或失败时执行额外的代码或修改测试行为。</li>
+<li>logging.Handler.emit: 该函数在记录日志时被调用，可以用于在记录日志时添加额外的处理或修改日志记录行为。</li>
+<li>setuptools.setup: 在安装Python包时，可以使用该函数的钩子机制自定义安装行为。</li>
+</ol>
+<p>使用钩子函数可以使代码更加灵活，允许我们修改已有的行为或添加新的行为，同时不需要修改现有代码。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+        <a href="/tags/python%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91/">#python测试开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python协程和pytest插件</div>
+      <div>http://example.com/2020/05/25/Python协程和pytest插件/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年5月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/17/Python%E8%BF%9B%E7%A8%8B%E6%B1%A0%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="Python进程池和线程池">
+                        <span class="hidden-mobile">Python进程池和线程池</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python进程池和线程池进程池pool1234567891011121314151617181920import osimport timefrom multiprocessing import Pool, Managerdef work1(i):    print(&quot;-----work1----&amp;#123;&amp;#125;----&amp;#123;&amp;#125;&quot;.format(i,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python进程池和线程池">
+<meta property="og:url" content="http://example.com/2020/05/17/Python%E8%BF%9B%E7%A8%8B%E6%B1%A0%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python进程池和线程池进程池pool1234567891011121314151617181920import osimport timefrom multiprocessing import Pool, Managerdef work1(i):    print(&quot;-----work1----&amp;#123;&amp;#125;----&amp;#123;&amp;#125;&quot;.format(i,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/jinchengchi.jpg">
+<meta property="article:published_time" content="2020-05-17T13:01:21.000Z">
+<meta property="article:modified_time" content="2023-03-27T15:12:44.805Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta property="article:tag" content="python测试开发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/jinchengchi.jpg">
+  
+  
+  
+  <title>Python进程池和线程池 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python进程池和线程池"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-05-17 21:01" pubdate>
+          2020年5月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          83 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python进程池和线程池</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python进程池和线程池"><a href="#Python进程池和线程池" class="headerlink" title="Python进程池和线程池"></a>Python进程池和线程池</h1><h2 id="进程池pool"><a href="#进程池pool" class="headerlink" title="进程池pool"></a>进程池pool</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool, Manager<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>(<span class="hljs-params">i</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;-----work1----&#123;&#125;----&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(i, os.getpid()))<br>    time.sleep(<span class="hljs-number">0.2</span>)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-comment"># 创建一个进程池（初始化5个进程）</span><br>    po = Pool(<span class="hljs-number">5</span>)<br>    <span class="hljs-comment"># 往进程池中提交任务</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>        po.apply_async(work1, args=(i,))<br>    <span class="hljs-comment"># 关闭进程池</span><br>    po.close()<br><br>po.join()<br></code></pre></td></tr></table></figure>
+
+<p>该代码演示了如何使用 Python 的 multiprocessing 模块的 Pool 类来创建一个进程池，并在进程池中提交任务。</p>
+<ul>
+<li>首先，通过 <code>Pool(5)</code> 创建一个进程池，其中 5 表示进程池中最多同时运行 5 个进程。</li>
+<li>然后，使用 <code>apply_async()</code> 方法向进程池中提交任务。该方法会异步地执行函数，即会立即返回，不会阻塞主进程。同时，也可以使用 <code>apply()</code> 方法，该方法会阻塞主进程，直到子进程执行完毕。</li>
+<li>最后，调用 <code>close()</code> 方法关闭进程池，防止新的任务提交进来。调用 <code>join()</code> 方法等待所有进程执行完毕，然后主进程才退出。</li>
+</ul>
+<p>在上述示例中，进程池中的工作进程是由操作系统自动分配的，并且可以在运行时动态地增加或减少。虽然进程池通常比单个进程执行任务更快，但进程池也存在一些缺点。例如，如果工作进程之间需要相互通信或共享数据，则必须使用 Manager 对象等方法来实现。</p>
+<h2 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">from concurrent.futures import ThreadPoolExecutor</span><br><span class="hljs-string"></span><br><span class="hljs-string">这个路径导入时没有代码提示的</span><br><span class="hljs-string"></span><br><span class="hljs-string">import time</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br>线程池和进程池的方法<br>submit方法：往线程池中提交任务,<br>    参数：<br>        第一个参数为任务函数，后面的时任务函数的参数<br>    返回值:为一个Future类型的对象，<br>        可以通过Future对象的result方法获取任务函数<span class="hljs-keyword">return</span>的结果<br>    <br>shutdown方法：等待线程池中的任务函数执行完毕。<br><br><span class="hljs-built_in">map</span>方法:批量提交任务到线程池<br>    参数：<br>        第一个参数:任务函数<br>        第二个参数：任务函数的参数集（可迭代对象）<br>    返回值：<br>        包含所以任务执行结果的生成器<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">from concurrent.futures.thread import ThreadPoolExecutor</span><br><span class="hljs-string"></span><br><span class="hljs-string">def work1(name):</span><br><span class="hljs-string">    for i in range(1, 6):</span><br><span class="hljs-string">        time.sleep(1)</span><br><span class="hljs-string">        print(&quot;&#123;&#125;-任务1执行的第&#123;&#125;秒&quot;.format(name, i))</span><br><span class="hljs-string">    return &#x27;python6666  --&#123;&#125;&#x27;.format(name)</span><br><span class="hljs-string"></span><br><span class="hljs-string">创建一个线程池</span><br><span class="hljs-string"></span><br><span class="hljs-string">tps = ThreadPoolExecutor(max_workers=5)</span><br><span class="hljs-string"></span><br><span class="hljs-string">提交任务的放啊</span><br><span class="hljs-string"></span><br><span class="hljs-string">fu1 = tps.submit(work1, name=&#x27;张三&#x27;)</span><br><span class="hljs-string"></span><br><span class="hljs-string">tps.submit(work1, name=&#x27;李四&#x27;)</span><br><span class="hljs-string"></span><br><span class="hljs-string">设置主线程等待线程池中的任务执行完毕</span><br><span class="hljs-string"></span><br><span class="hljs-string">tps.shutdown()</span><br><span class="hljs-string"></span><br><span class="hljs-string">获取任务函数执行的结果</span><br><span class="hljs-string"></span><br><span class="hljs-string">res = fu1.result()</span><br><span class="hljs-string"></span><br><span class="hljs-string">print(res)</span><br><span class="hljs-string"></span><br><span class="hljs-string">res = tps.map(work1, [&#x27;张三&#x27;, &#x27;李四&#x27;, &#x27;王五&#x27;])</span><br><span class="hljs-string"></span><br><span class="hljs-string">#</span><br><span class="hljs-string"></span><br><span class="hljs-string">print(&quot;map的返回值&quot;,list(res))</span><br><span class="hljs-string"></span><br><span class="hljs-string">print(&quot;-----end------------&quot;)</span><br></code></pre></td></tr></table></figure>
+
+<p>Python中的线程池是一种用于管理和维护线程的机制，通过它可以方便地管理线程的数量和状态，从而实现高效的并发编程。</p>
+<p>使用Python中的线程池可以帮助我们在不同的任务之间快速切换，从而实现高效的任务调度和执行。下面介绍Python中线程池的使用方法。</p>
+<ol>
+<li>导入模块</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>创建线程池</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">executor = ThreadPoolExecutor(max_workers=<span class="hljs-number">5</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，我们创建了一个最大容量为5的线程池executor。</p>
+<ol>
+<li>添加任务</li>
+</ol>
+<p>使用submit()方法向线程池中添加任务：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">future = executor.submit(task_func, arg1, arg2, ...)<br></code></pre></td></tr></table></figure>
+
+<p>其中，task_func是任务函数，arg1、arg2是函数的参数。submit()方法会返回一个Future对象，通过该对象可以获取任务的执行结果。</p>
+<ol>
+<li>关闭线程池</li>
+</ol>
+<p>在任务执行完毕后，要调用shutdown()方法关闭线程池。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">executor.shutdown()<br></code></pre></td></tr></table></figure>
+
+<p>下面是一个示例代码，演示如何使用Python线程池：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">task_func</span>(<span class="hljs-params">n</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;start task &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(n))<br>    time.sleep(<span class="hljs-number">1</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;end task &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(n))<br>    <span class="hljs-keyword">return</span> n * n<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-comment"># 创建线程池</span><br>    executor = ThreadPoolExecutor(max_workers=<span class="hljs-number">5</span>)<br><br>    <span class="hljs-comment"># 提交任务</span><br>    futures = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        future = executor.submit(task_func, i)<br>        futures.append(future)<br><br>    <span class="hljs-comment"># 获取任务结果</span><br>    results = []<br>    <span class="hljs-keyword">for</span> future <span class="hljs-keyword">in</span> futures:<br>        result = future.result()<br>        results.append(result)<br><br>    <span class="hljs-comment"># 关闭线程池</span><br>    executor.shutdown()<br><br>    <span class="hljs-comment"># 打印结果</span><br>    <span class="hljs-built_in">print</span>(results)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，我们创建了一个最大容量为5的线程池executor，并向线程池中提交了10个任务。每个任务都会执行1秒钟，并返回一个平方数作为结果。最后，我们打印了所有任务的执行结果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br>这个路径导入时没有代码提示的<br><br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">线程池和进程池的方法</span><br><span class="hljs-string">submit方法：往线程池中提交任务,</span><br><span class="hljs-string">    参数：</span><br><span class="hljs-string">        第一个参数为任务函数，后面的时任务函数的参数</span><br><span class="hljs-string">    返回值:为一个Future类型的对象，</span><br><span class="hljs-string">        可以通过Future对象的result方法获取任务函数return的结果</span><br><span class="hljs-string">    </span><br><span class="hljs-string">shutdown方法：等待线程池中的任务函数执行完毕。</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">map方法:批量提交任务到线程池</span><br><span class="hljs-string">    参数：</span><br><span class="hljs-string">        第一个参数:任务函数</span><br><span class="hljs-string">        第二个参数：任务函数的参数集（可迭代对象）</span><br><span class="hljs-string">    返回值：</span><br><span class="hljs-string">        包含所以任务执行结果的生成器</span><br><span class="hljs-string"></span><br><span class="hljs-string">线程池的上下文管理器协议中的退出方法，调用了等待线程池中任务执行结束的方法。</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-keyword">from</span> concurrent.futures.thread <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>(<span class="hljs-params">name</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">6</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&#123;&#125;-任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(name, i))<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;python6666  --&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(name)<br><br>创建一个线程池<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=<span class="hljs-number">5</span>) <span class="hljs-keyword">as</span> tps:<br>    res = tps.<span class="hljs-built_in">map</span>(work1, [<span class="hljs-string">&#x27;11&#x27;</span>, <span class="hljs-string">&#x27;22&#x27;</span>, <span class="hljs-string">&#x27;33&#x27;</span>, <span class="hljs-string">&#x27;44&#x27;</span>])<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(res))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=========end==================&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>Python中的线程池可以通过<code>ThreadPoolExecutor</code>类实现，该类提供了丰富的线程池管理方法。在使用线程池时，可以通过使用上下文管理器协议来更方便地管理线程池。上下文管理器协议通过<code>with</code>语句实现，可以自动完成线程池的创建、任务的提交和回收。</p>
+<h2 id="线程池上下文管理器协议"><a href="#线程池上下文管理器协议" class="headerlink" title="线程池上下文管理器协议"></a>线程池上下文管理器协议</h2><p>线程池上下文管理器协议需要实现两个方法：<code>__enter__()</code>和<code>__exit__()</code>。当使用<code>with</code>语句时，<code>__enter__()</code>方法会被调用，并返回一个线程池对象，该对象可以用于提交任务。<code>__exit__()</code>方法则在<code>with</code>块执行完毕后自动被调用，用于清理线程池资源。</p>
+<p>下面是一个使用线程池上下文管理器协议的示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python">pythonCopy code<br><span class="hljs-keyword">import</span> concurrent.futures<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work1: &#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;work2: &#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><span class="hljs-comment"># 创建线程池上下文管理器</span><br><span class="hljs-keyword">with</span> concurrent.futures.ThreadPoolExecutor(max_workers=<span class="hljs-number">2</span>) <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-comment"># 提交任务</span><br>    future1 = executor.submit(work1)<br>    future2 = executor.submit(work2)<br><br><span class="hljs-comment"># 线程池会在with块执行完毕后自动关闭和回收资源</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的示例中，我们通过<code>with</code>语句创建了一个最大工作线程数为2的线程池。在<code>with</code>块中，我们使用<code>submit()</code>方法向线程池提交了两个任务<code>work1()</code>和<code>work2()</code>。在<code>with</code>块执行完毕后，线程池会自动关闭和回收资源。</p>
+<p>除了<code>submit()</code>方法，线程池还提供了其他方法用于任务的提交和结果的获取。在使用线程池时，可以根据需要选择适合的方法。</p>
+<h2 id="进程池的使用"><a href="#进程池的使用" class="headerlink" title="进程池的使用"></a>进程池的使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">from concurrent.futures import ThreadPoolExecutor</span><br><span class="hljs-string"></span><br><span class="hljs-string">这个路径导入时没有代码提示的</span><br><span class="hljs-string"></span><br><span class="hljs-string">import time</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br>进程池的方法<br>submit方法：往进程池中提交任务,<br>    参数：<br>        第一个参数为任务函数，后面的时任务函数的参数<br>    返回值:为一个Future类型的对象，<br>        可以通过Future对象的result方法获取任务函数<span class="hljs-keyword">return</span>的结果<br>    <br>shutdown方法：等待进程池中的任务函数执行完毕。<br><br><br><span class="hljs-built_in">map</span>方法:批量提交任务到进程池<br>    参数：<br>        第一个参数:任务函数<br>        第二个参数：任务函数的参数集（可迭代对象）<br>    返回值：<br>        包含所以任务执行结果的生成器<br><br>线程池的上下文管理器协议中的退出方法，调用了等待线程池中任务执行结束的方法。<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">from concurrent.futures.process import ProcessPoolExecutor</span><br><span class="hljs-string">from multiprocessing import Manager</span><br><span class="hljs-string"></span><br><span class="hljs-string">进程池直接的通讯队列</span><br><span class="hljs-string"></span><br><span class="hljs-string">que = Manager().Queue()</span><br><span class="hljs-string"></span><br><span class="hljs-string">def work1(name):</span><br><span class="hljs-string">    for i in range(1, 6):</span><br><span class="hljs-string">        time.sleep(1)</span><br><span class="hljs-string">        print(&quot;&#123;&#125;-任务1执行的第&#123;&#125;秒&quot;.format(name, i))</span><br><span class="hljs-string">    return &#x27;python6666  --&#123;&#125;&#x27;.format(name)</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">if __name__ == &#x27;__main__&#x27;:</span><br><span class="hljs-string">    # 创建一个线程池</span><br><span class="hljs-string">    with ProcessPoolExecutor(max_workers=5) as tps:</span><br><span class="hljs-string">        res = tps.map(work1, [&#x27;11&#x27;, &#x27;22&#x27;, &#x27;33&#x27;, &#x27;44&#x27;])</span><br><span class="hljs-string"></span><br><span class="hljs-string">print(list(res))</span><br><span class="hljs-string">print(&quot;=========end==================&quot;)</span><br></code></pre></td></tr></table></figure>
+
+<p>Python中的进程池（<code>multiprocessing.Pool</code>）是一种用于管理和分配进程的工具，可以方便地实现进程的并发执行。使用进程池，可以避免重复地创建和销毁进程，减少系统资源的消耗，提高程序的效率。</p>
+<p>下面是使用Python进程池的基本步骤：</p>
+<ol>
+<li><p>导入相关模块</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>创建进程池</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">p = Pool(processes=<span class="hljs-number">5</span>)<br></code></pre></td></tr></table></figure>
+
+<p><code>processes</code>参数指定进程池中的进程数量。</p>
+</li>
+<li><p>向进程池中提交任务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">p.apply_async(func, args=(...,))<br></code></pre></td></tr></table></figure>
+
+<p><code>func</code>为要执行的函数，<code>args</code>为函数的参数，可以是一个元组或列表。</p>
+<p>如果要获取任务执行的结果，可以使用<code>get()</code>方法。</p>
+</li>
+<li><p>关闭进程池</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">p.close()<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>等待任务执行完成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">p.join()<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>下面是一个使用进程池的示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Pool<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">worker</span>(<span class="hljs-params">x</span>):<br>    time.sleep(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">return</span> x*x<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    pool = Pool(processes=<span class="hljs-number">4</span>)<br>    results = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        results.append(pool.apply_async(worker, args=(i,)))<br>    pool.close()<br>    pool.join()<br>    <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> results:<br>        <span class="hljs-built_in">print</span>(r.get())<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，我们创建了一个进程池，提交了10个任务给进程池执行，并获取任务的结果。注意，我们在调用<code>get()</code>方法时，必须等待任务执行完成后才能获取到结果，否则会阻塞进程。</p>
+<p>进程池除了<code>apply_async()</code>方法外，还提供了其他一些方法，例如<code>apply()</code>、<code>map()</code>、<code>imap()</code>等，它们的使用方式类似于<code>apply_async()</code>方法。具体使用可以查看Python官方文档。</p>
+<h2 id="提交任务返回的Future对象"><a href="#提交任务返回的Future对象" class="headerlink" title="提交任务返回的Future对象"></a>提交任务返回的Future对象</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">import time</span><br><span class="hljs-string">from concurrent.futures.thread import ThreadPoolExecutor</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br>Future对象的方法：<br><br>result():获取任务函数执行返回的结果<br><br>add_done_callback():添加任务执行完之后的回调函数<br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string"></span><br><span class="hljs-string">def work1(name):</span><br><span class="hljs-string">    for i in range(1, 6):</span><br><span class="hljs-string">        time.sleep(1)</span><br><span class="hljs-string">        print(&quot;&#123;&#125;-任务1执行的第&#123;&#125;秒&quot;.format(name, i))</span><br><span class="hljs-string">    return &#x27;python6666  --&#123;&#125;&#x27;.format(name)</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">def get_result(fu):</span><br><span class="hljs-string">    print(&quot;回调函数：&quot;, fu.result())</span><br><span class="hljs-string"></span><br><span class="hljs-string">创建一个线程池</span><br><span class="hljs-string"></span><br><span class="hljs-string">with ThreadPoolExecutor(max_workers=5) as tps:</span><br><span class="hljs-string">    for i in [&#x27;木森&#x27;, &#x27;张三&#x27;]:</span><br><span class="hljs-string">        futu = tps.submit(work1, i)</span><br><span class="hljs-string">        futu.add_done_callback(get_result)</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="unittest的用例执行机制和套件解析"><a href="#unittest的用例执行机制和套件解析" class="headerlink" title="unittest的用例执行机制和套件解析"></a>unittest的用例执行机制和套件解析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br>unittest内部用例执行的机制：<br>方式一：通过执行器去执行测试套件（内置的执行器unittest.TextTestRunner()）<br>    <span class="hljs-comment"># 1、创建一个unittest.TestResult()对象，用来保存用例执行的结果</span><br>    <span class="hljs-comment"># 2、调用套件的run方法，执行测试套件suite.run(unittest.TestResult())</span><br>    <span class="hljs-comment"># 3、整理unittest.TestResult()中的执行结果，渲染报告</span><br>    <span class="hljs-comment">#执行器的内部执行用例，本质上还是调用的 套件的run方法</span><br>    <br>方式二：通过测试套件的run方法<br>    <span class="hljs-comment"># 1、遍历套件出套件中所以的测试用例。</span><br>    <span class="hljs-comment"># 2、调用用例的run去执行</span><br>    <br>方式三：通过测试用例的run方法<br>    <span class="hljs-comment"># unittest中用例最终执行的方法</span><br><br>unittest.TestResult:unittest中内置的测试结果收集器<br><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">import unittest</span><br><span class="hljs-string"></span><br><span class="hljs-string">加载指定目录下的用例到测试套件</span><br><span class="hljs-string"></span><br><span class="hljs-string">suite = unittest.defaultTestLoader.discover(r&#x27;C:\project\ck11_class\day11\testcase&#x27;)</span><br><span class="hljs-string"></span><br><span class="hljs-string">方式一：</span><br><span class="hljs-string"></span><br><span class="hljs-string">runner = unittest.TextTestRunner()</span><br><span class="hljs-string"></span><br><span class="hljs-string">runner.run(suite)</span><br><span class="hljs-string"></span><br><span class="hljs-string">方式二：调用套件的run方法</span><br><span class="hljs-string"></span><br><span class="hljs-string">res = suite.run(unittest.TestResult())</span><br><span class="hljs-string"></span><br><span class="hljs-string">print(res)</span><br><span class="hljs-string"></span><br><span class="hljs-string">print()</span><br><span class="hljs-string"></span><br><span class="hljs-string">方式三：通过用例的run方法执行</span><br><span class="hljs-string"></span><br><span class="hljs-string">case_ = suite._tests[0]._tests[0]._tests[0]</span><br><span class="hljs-string"></span><br><span class="hljs-string">case_.run(unittest.TestResult())</span><br><span class="hljs-string"></span><br><span class="hljs-string">多线程并发执行用例：</span><br><span class="hljs-string"></span><br><span class="hljs-string">为了确保同一个用例类中，用例执行的前后关系，我们可以测试类作为线程执行的任务提交到线程池</span><br><span class="hljs-string"></span><br><span class="hljs-string">def parse_test_cls(suite):</span><br><span class="hljs-string"></span><br><span class="hljs-string">for item in suite:</span><br><span class="hljs-string"></span><br><span class="hljs-string">for su in item:</span><br><span class="hljs-string"></span><br><span class="hljs-string">for c in su:</span><br><span class="hljs-string"></span><br><span class="hljs-string">print(c, isinstance(c, unittest.TestCase))</span><br><span class="hljs-string"></span><br><span class="hljs-string">保存所以用例类的列表</span><br><span class="hljs-string"></span><br><span class="hljs-string">test_cls = []</span><br><span class="hljs-string"></span><br><span class="hljs-string">def parse_test_cls(suite):</span><br><span class="hljs-string">    for item in suite:</span><br><span class="hljs-string">        if isinstance(item, unittest.TestCase):</span><br><span class="hljs-string">            # print(&quot;item是测试用例&quot;,item)</span><br><span class="hljs-string">            return test_cls.append(suite)</span><br><span class="hljs-string">        else:</span><br><span class="hljs-string">            parse_test_cls(item)</span><br><span class="hljs-string"></span><br><span class="hljs-string">收集所以的用例</span><br><span class="hljs-string"></span><br><span class="hljs-string">suite = unittest.defaultTestLoader.discover(r&#x27;C:\project\ck11_class\day11\testcase&#x27;)</span><br><span class="hljs-string"></span><br><span class="hljs-string">解析套件中的用例，以测试类为单位，放入test_cls中</span><br><span class="hljs-string"></span><br><span class="hljs-string">parse_test_cls(suite)</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">print(len(test_cls))</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="使用线程池并发执行unittest的用例"><a href="#使用线程池并发执行unittest的用例" class="headerlink" title="使用线程池并发执行unittest的用例"></a>使用线程池并发执行unittest的用例</h2><p>“””<br>“””<br>unittest内部用例执行的机制：<br>方式一：通过执行器去执行测试套件（内置的执行器unittest.TextTestRunner()）<br>    # 1、创建一个unittest.TestResult()对象，用来保存用例执行的结果<br>    # 2、调用套件的run方法，执行测试套件suite.run(unittest.TestResult())<br>    # 3、整理unittest.TestResult()中的执行结果，渲染报告<br>    #执行器的内部执行用例，本质上还是调用的 套件的run方法</p>
+<p>方式二：通过测试套件的run方法<br>    # 1、遍历套件出套件中所以的测试用例。<br>    # 2、调用用例的run去执行</p>
+<p>方式三：通过测试用例的run方法<br>    # unittest中用例最终执行的方法</p>
+<p>unittest.TestResult:unittest中内置的测试结果收集器</p>
+<p>“””</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> unittest<br><span class="hljs-keyword">from</span> concurrent.futures.thread <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyTestRunner</span>:<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, path</span>):<br>    self.path = path<br><br>创建一个测试结果收集器<br><br>​    self.result = unittest.TestResult()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">loadTestCase</span>(<span class="hljs-params">self, path</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    :param path: 用例存放目录路径</span><br><span class="hljs-string">    :return: 包含所以测试类的列表</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>收集所以的用例<br><br>​    suite = unittest.defaultTestLoader.discover(path)<br><br>保存所以用例类的列表<br><br>​    test_cls = []<br><br>​    <span class="hljs-keyword">def</span> <span class="hljs-title function_">parse_test_cls</span>(<span class="hljs-params">suite</span>):<br>​        <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> suite:<br>​            <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(item, unittest.TestCase):<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;item是测试用例&quot;</span>,item)<br><br>​                <span class="hljs-keyword">return</span> test_cls.append(suite)<br>​            <span class="hljs-keyword">else</span>:<br>​                parse_test_cls(item)<br><br>解析套件中的用例，以测试类为单位，放入test_cls中<br><br>​    parse_test_cls(suite)<br><br>​    <span class="hljs-keyword">return</span> test_cls<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self, thread_count</span>):<br><br>加载所以的测试类<br><br>​    cases = self.loadTestCase(self.path)<br><br>创建一个线程池<br><br>​    <span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=thread_count) <span class="hljs-keyword">as</span> tps:<br>​        <span class="hljs-keyword">for</span> cls <span class="hljs-keyword">in</span> cases:<br><br>执行测试用例<br><br>​            tps.submit(cls.run, self.result)<br><br>生成测试报告<br><br>​    self.generator_report()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">generator_report</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;生成测试报告&quot;&quot;&quot;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;-----生成测试报告-----&quot;</span>)<br>    <span class="hljs-built_in">print</span>(self.result)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    runner = MyTestRunner(<span class="hljs-string">r&#x27;C:\project\ck11_class\day11\testcase&#x27;</span>)<br>    runner.run(<span class="hljs-number">4</span>)<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+        <a href="/tags/python%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91/">#python测试开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python进程池和线程池</div>
+      <div>http://example.com/2020/05/17/Python进程池和线程池/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年5月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/05/25/Python%E5%8D%8F%E7%A8%8B%E5%92%8Cpytest%E6%8F%92%E4%BB%B6/" title="Python协程和pytest插件">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python协程和pytest插件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/11/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B/" title="Python多进程">
+                        <span class="hidden-mobile">Python多进程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

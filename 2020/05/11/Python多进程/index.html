@@ -1,0 +1,763 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="魏振">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python多进程python中的queue模块12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152from queue import Queue, LifoQueue, PriorityQueue# 实例化一个队列（存放数据的容器）q &#x3D; Queue(5)#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python多进程">
+<meta property="og:url" content="http://example.com/2020/05/11/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B/index.html">
+<meta property="og:site_name" content="open测试猿">
+<meta property="og:description" content="Python多进程python中的queue模块12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152from queue import Queue, LifoQueue, PriorityQueue# 实例化一个队列（存放数据的容器）q &#x3D; Queue(5)#">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/duojincheng.jpg">
+<meta property="article:published_time" content="2020-05-11T04:15:45.000Z">
+<meta property="article:modified_time" content="2023-03-27T15:10:29.237Z">
+<meta property="article:author" content="魏振">
+<meta property="article:tag" content="python语法">
+<meta property="article:tag" content="python高级语法">
+<meta property="article:tag" content="python测试开发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/duojincheng.jpg">
+  
+  
+  
+  <title>Python多进程 - open测试猿</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>魏振博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python多进程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-05-11 12:15" pubdate>
+          2020年5月11日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          89 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python多进程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Python多进程"><a href="#Python多进程" class="headerlink" title="Python多进程"></a>Python多进程</h1><h2 id="python中的queue模块"><a href="#python中的queue模块" class="headerlink" title="python中的queue模块"></a>python中的queue模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue, LifoQueue, PriorityQueue<br><br><span class="hljs-comment"># 实例化一个队列（存放数据的容器）</span><br>q = Queue(<span class="hljs-number">5</span>)<br><br><span class="hljs-comment"># 添加数据（如果队列已满，则会进入堵塞状态）</span><br><span class="hljs-comment"># put_nowait: 添加数据不等待（如果队列已满，则会抛出异常）</span><br>q.put(<span class="hljs-string">&#x27;111&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;222&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;333&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;444&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;555&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;--------5----&#x27;</span>)<br>q.put_nowait(<span class="hljs-string">&#x27;6666&#x27;</span>)  <span class="hljs-comment"># 如果队列已满，则会抛出异常</span><br>q.put(<span class="hljs-string">&#x27;6666&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;--------6----&#x27;</span>)<br><br><span class="hljs-comment"># 获取数据（如果队列为空，则会进入堵塞状态）</span><br><span class="hljs-comment"># get_nowait: 获取数据不等待（如果队列为空，则会抛出异常）</span><br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get(block=<span class="hljs-literal">False</span>))<br><span class="hljs-built_in">print</span>(q.get(timeout=<span class="hljs-number">3</span>))<br><span class="hljs-built_in">print</span>(q.get_nowait())<br><br><span class="hljs-comment"># 获取队列中数据的长度，判断队列是否已满或为空</span><br>q = Queue(<span class="hljs-number">5</span>)<br>q.put(<span class="hljs-string">&#x27;111&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;222&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;333&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;444&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;555&#x27;</span>)<br><span class="hljs-built_in">print</span>(q.qsize())  <span class="hljs-comment"># 获取队列中数据的长度</span><br><span class="hljs-built_in">print</span>(q.full())  <span class="hljs-comment"># 判断队列是否已满</span><br><span class="hljs-built_in">print</span>(q.empty())  <span class="hljs-comment"># 判断队列是否为空</span><br><br><span class="hljs-comment"># 等待队列中的任务(数据)执行完毕</span><br><span class="hljs-comment"># 通知队列，任务执行结束</span><br>q = Queue(<span class="hljs-number">5</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;----start----&quot;</span>)<br>q.put(<span class="hljs-string">&#x27;111&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;222&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;333&#x27;</span>)<br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br>q.task_done()  <span class="hljs-comment"># 通知队列，任务执行结束</span><br>q.task_done()  <span class="hljs-comment"># 通知队列，任务执行结束</span><br>q.join()  <span class="hljs-comment"># 等待队列中的任务(数据)执行完毕</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;----end----&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码演示了 <code>queue</code> 模块中的 <code>Queue</code> 类的使用，其中包括了队列的添加、获取、长度、已满、为空等基本操作，以及等待队列中的任务执行完毕的 <code>join()</code> 方法和通知任务执行结束的 <code>task_done()</code> 方法。</p>
+<p>Python 中的 <code>queue</code> 模块提供了多种数据结构实现的线程安全队列。它提供了 <code>Queue</code>、<code>LifoQueue</code> 和 <code>PriorityQueue</code> 三种队列类型，这些队列都是线程安全的。</p>
+<ul>
+<li><code>Queue</code>：先进先出队列，支持多线程编程。</li>
+<li><code>LifoQueue</code>：后进先出队列，支持多线程编程。</li>
+<li><code>PriorityQueue</code>：带优先级的队列，支持多线程编程。</li>
+</ul>
+<p>这三种队列类型都具有相似的操作方法，包括：</p>
+<ul>
+<li><code>get()</code>：获取队列中的一个元素，如果队列为空则阻塞等待。</li>
+<li><code>put(item)</code>：将一个元素加入队列中，如果队列已满则阻塞等待。</li>
+<li><code>get_nowait()</code>：获取队列中的一个元素，如果队列为空则抛出 <code>queue.Empty</code> 异常。</li>
+<li><code>put_nowait(item)</code>：将一个元素加入队列中，如果队列已满则抛出 <code>queue.Full</code> 异常。</li>
+<li><code>empty()</code>：判断队列是否为空。</li>
+<li><code>full()</code>：判断队列是否已满。</li>
+<li><code>qsize()</code>：获取队列中的元素个数。</li>
+<li><code>join()</code>：等待队列中的所有元素都被取出。</li>
+<li><code>task_done()</code>：用于在完成一项任务后，向任务已经完成的队列发送一个信号。</li>
+</ul>
+<p>除此之外，<code>queue</code> 模块还提供了一些线程安全的基本数据结构，如 <code>deque</code>（双端队列）和 <code>LifoDeque</code>（后进先出的双端队列），它们也可以被用于线程安全的队列实现。</p>
+<p>总之，<code>queue</code> 模块为 Python 多线程编程提供了很好的支持。通过它提供的线程安全队列，可以有效地协调多个线程之间的数据传输和共享。</p>
+<h2 id="队列处理多线程资源竞争的问题"><a href="#队列处理多线程资源竞争的问题" class="headerlink" title="队列处理多线程资源竞争的问题"></a>队列处理多线程资源竞争的问题</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue<br><br>q = Queue()<br>q.put(<span class="hljs-number">0</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100000</span>):<br>        number = q.get()<br>        number += <span class="hljs-number">1</span><br>        q.put(number)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100000</span>):<br>        number = q.get()<br>        number += <span class="hljs-number">1</span><br>        q.put(number)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><br>创建线程<br><br>t1 = Thread(target=work1)<br>t2 = Thread(target=work2)<br><br>启动线程<br><br>t1.start()<br>t2.start()<br>t1.join()<br>t2.join()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;主线程：&quot;</span>, q.get())<br></code></pre></td></tr></table></figure>
+
+<p>以上代码中，我们引入了 <code>queue</code> 模块中的 <code>Queue</code> 类来创建一个队列对象 <code>q</code>。我们将数字 <code>0</code> 放入队列中，并分别创建了两个线程 <code>t1</code> 和 <code>t2</code>，分别执行 <code>work1</code> 和 <code>work2</code> 函数中的任务，从队列中取出数字进行加一并再次放回队列中。最后在主线程中，我们通过 <code>q.get()</code> 方法取出队列中最后一个数字，并输出结果。</p>
+<p>这个例子中展示了如何在多线程环境下使用队列来实现线程之间的数据共享和同步。因为 <code>Queue</code> 类本身就是线程安全的，所以我们可以放心地将其用于多线程编程中。同时，通过队列的先进先出（FIFO）特性，我们可以保证线程之间的数据传递顺序。</p>
+<h2 id="队列扩展"><a href="#队列扩展" class="headerlink" title="队列扩展"></a>队列扩展</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> LifoQueue, PriorityQueue<br><br><span class="hljs-comment"># LifoQueue示例</span><br>q = LifoQueue()<br><br>q.put(<span class="hljs-string">&#x27;111&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;222&#x27;</span>)<br>q.put(<span class="hljs-string">&#x27;333&#x27;</span>)<br><br><span class="hljs-built_in">print</span>(q.get())<br><br><span class="hljs-comment"># PriorityQueue示例</span><br>q = PriorityQueue()<br><br><span class="hljs-comment"># 队列中添加的数据为元组（元组的第一个值表示优先级）</span><br>q.put((<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;go&#x27;</span>))<br>q.put((<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;3php&#x27;</span>))<br>q.put((<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;1python&#x27;</span>))<br>q.put((<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;2java&#x27;</span>))<br><br><span class="hljs-comment"># 会根据优先级来获取数据，优先级值越小，越先出来</span><br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br><span class="hljs-built_in">print</span>(q.get())<br></code></pre></td></tr></table></figure>
+
+<p>在上述代码中，我们引入了 <code>queue</code> 模块中的 <code>LifoQueue</code> 和 <code>PriorityQueue</code> 类来创建了两个不同类型的队列对象 <code>q</code>。在 <code>LifoQueue</code> 示例中，我们向队列中添加了三个元素，并通过 <code>get()</code> 方法以后进先出（LIFO）的方式取出了最后一个元素。在 <code>PriorityQueue</code> 示例中，我们向队列中添加了四个元组，其中每个元组包含了一个优先级和一个数据项，通过 <code>get()</code> 方法按照优先级从小到大取出了三个元素。</p>
+<h2 id="通过线程和队列实现生产者消费者模式"><a href="#通过线程和队列实现生产者消费者模式" class="headerlink" title="通过线程和队列实现生产者消费者模式"></a>通过线程和队列实现生产者消费者模式</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><br>datas = Queue(<span class="hljs-number">10000</span>)<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">PutData</span>(<span class="hljs-title class_ inherited__">Thread</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;生产者&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>):<br>    count = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):<br>            data = <span class="hljs-string">&#x27;第&#123;&#125;轮--数据&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(count, i)<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;生产：&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(data))<br>            datas.put(data)<br>        time.sleep(<span class="hljs-number">1</span>)<br>        count += <span class="hljs-number">1</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HandleData</span>(<span class="hljs-title class_ inherited__">Thread</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;消费者&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;消费：数据&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(datas.get()))<br>        time.sleep(<span class="hljs-number">1</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br><br><span class="hljs-comment">#一个线程生产</span><br><br>    PutData().start()<br><br><span class="hljs-comment">#5个线程消费</span><br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        HandleData().start()<br></code></pre></td></tr></table></figure>
+
+<p>这段代码实现了一个简单的生产者-消费者模型。其中，<code>PutData</code> 类作为生产者，每秒钟生产 100 条数据，并将数据放入 <code>Queue</code> 中；<code>HandleData</code> 类作为消费者，每秒钟消费 20 条数据。</p>
+<p>主程序中创建了一个生产者线程和五个消费者线程，启动后即开始不断地生产和消费数据。</p>
+<p>其中，<code>Queue</code> 是 Python 内置的线程安全的队列类，可以用于在线程间传递数据。在本例中，<code>Queue</code> 实例 <code>datas</code> 的最大容量为 10000。<code>put</code> 方法用于向队列中添加元素，<code>get</code> 方法用于从队列中取出元素。当队列已满或已空时，<code>put</code> 方法和 <code>get</code> 方法都会阻塞线程。</p>
+<p><code>Thread</code> 类是 Python 内置的线程类，可以用于创建新线程。在本例中，每个生产者和消费者都继承自 <code>Thread</code> 类，并覆盖了 <code>run</code> 方法。<code>run</code> 方法是线程的主体，包含了线程的执行逻辑。线程启动后，<code>run</code> 方法会在新的线程中执行。</p>
+<p>该代码实现了简单的生产者-消费者模型，但是存在一些问题。例如，生产者和消费者之间的数据同步问题需要仔细考虑。此外，<code>Queue</code> 的最大容量也可能会成为瓶颈，需要根据实际情况进行调整。</p>
+<h2 id="python中的进程模块使用"><a href="#python中的进程模块使用" class="headerlink" title="python中的进程模块使用"></a>python中的进程模块使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">进程：进行的资源是独立的</span><br><span class="hljs-string"></span><br><span class="hljs-string">注意点：window下 python创建多进程的代码入口一定要放在 if __name__ == &#x27;__main__&#x27;:里面</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><br><span class="hljs-keyword">import</span> time<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">6</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务1执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;任务2执行的第&#123;&#125;秒&quot;</span>.<span class="hljs-built_in">format</span>(i))<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-comment"># 创建子进程</span><br>    p1 = Process(target=work1)<br>    p2 = Process(target=work2)<br><br><span class="hljs-comment">#启动进程</span><br><br>p1.start()<br>p2.start()<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
+
+
+
+<p>Python提供了内置的<code>multiprocessing</code>模块，可以在Python中创建进程，实现多进程编程。在Python中，可以使用<code>Process</code>类来创建进程。下面介绍一些常用的进程模块中的函数和方法：</p>
+<ol>
+<li><code>Process(target=函数名, args=(传递的参数))</code>: 用于创建一个新的进程，其中<code>target</code>参数为子进程执行的函数名，<code>args</code>参数为传递给子进程的参数，可以传递多个参数，以元组的形式传递。</li>
+<li><code>process.start()</code>: 启动进程。调用<code>process.start()</code>方法会执行<code>target(*args)</code>。</li>
+<li><code>process.join([timeout])</code>: 阻塞进程，等待子进程结束。<code>timeout</code>为可选参数，表示阻塞的最长时间，单位是秒。如果不传递该参数，主进程将一直等待子进程结束。</li>
+<li><code>process.terminate()</code>: 强制终止进程。</li>
+</ol>
+<p>下面是一个简单的例子，演示如何使用进程模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">num</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;第<span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span>次执行，进程id为：<span class="hljs-subst">&#123;os.getpid()&#125;</span>&quot;</span>)<br>        time.sleep(<span class="hljs-number">1</span>)<br>    <br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    p1 = Process(target=func, args=(<span class="hljs-number">5</span>,))<br>    p2 = Process(target=func, args=(<span class="hljs-number">3</span>,))<br>    <br>    p1.start()<br>    p2.start()<br>    <br>    p1.join()<br>    p2.join()<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，我们使用<code>Process</code>类创建了两个子进程，分别执行<code>func(5)</code>和<code>func(3)</code>函数。在主进程中，使用<code>p1.join()</code>和<code>p2.join()</code>语句阻塞主进程，等待子进程执行结束。执行结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python">第<span class="hljs-number">1</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4922</span><br>第<span class="hljs-number">1</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4923</span><br>第<span class="hljs-number">2</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4922</span><br>第<span class="hljs-number">2</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4923</span><br>第<span class="hljs-number">3</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4922</span><br>第<span class="hljs-number">3</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4923</span><br>第<span class="hljs-number">4</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4922</span><br>第<span class="hljs-number">1</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4924</span><br>第<span class="hljs-number">5</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4922</span><br>第<span class="hljs-number">2</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4924</span><br>第<span class="hljs-number">3</span>次执行，进程<span class="hljs-built_in">id</span>为：<span class="hljs-number">4924</span><br></code></pre></td></tr></table></figure>
+
+<p>注意，在多进程编程中，每个子进程都有独立的内存空间，各个子进程之间不能直接共享数据，因此需要使用<code>Queue</code>等数据结构实现进程间通信，才能实现数据共享。此外，由于进程的创建和销毁需要一定的开销，因此过多地创建进程会导致系统资源的浪费，应该在创建进程时慎重考虑。</p>
+<h2 id="python进程对象的参数和方法"><a href="#python进程对象的参数和方法" class="headerlink" title="python进程对象的参数和方法"></a>python进程对象的参数和方法</h2><p>“””<br>from multiprocessing import Process</p>
+<p>“””<br>Process创建线程的参数：<br>    target：指定线程执行的任务函数<br>    daemon：是否设置为守护进程（默认是False）,【守护线进程：主进程执行结束后，自动退出】<br>    name:设置进程名<br>    args：给任务函数传递位置参数（元组）<br>    kwargs:给任务函数传递关键字参数(字典)</p>
+<p>进程对像的方法：<br>    start():启动线进程的<br>    join()：设置主进程等待子进程执行的时间（默认等待执行完毕）<br>    run():进程中执行任务函数的方法</p>
+<p>在进程中如何获取进程的id以及父进程的id</p>
+<p>获取进程id:os.getpid<br>获取父进程id:os.getppid</p>
+<p>判断进程是否存活</p>
+<p>“””</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> os<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">6</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;父进程的id为<span class="hljs-subst">&#123;os.getppid()&#125;</span>，当前进程id为：<span class="hljs-subst">&#123;os.getpid()&#125;</span>任务1执行的第<span class="hljs-subst">&#123;i&#125;</span>秒&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">7</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;父进程的id为<span class="hljs-subst">&#123;os.getppid()&#125;</span>,进程id为：<span class="hljs-subst">&#123;os.getpid()&#125;</span>任务2执行的第<span class="hljs-subst">&#123;i&#125;</span>秒&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-comment"># 创建子进程</span><br>    p1 = Process(target=work1)<br>    p2 = Process(target=work2)<br><br>启动进程<br><br>p1.start()<br>p2.start()<br><br>进程的其他几个方法<br><br><span class="hljs-built_in">print</span>(p1.is_alive())<br><span class="hljs-built_in">print</span>(p2.is_alive())<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;主进程结束,主进程的id&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(os.getpid()))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<p>Python中的<code>Process</code>类是用于创建子进程的类，提供了很多参数和方法，下面详细介绍一下。</p>
+<h2 id="创建Process对象"><a href="#创建Process对象" class="headerlink" title="创建Process对象"></a>创建Process对象</h2><p>创建<code>Process</code>对象时可以传递以下参数：</p>
+<ul>
+<li><code>target</code>：表示要执行的方法，必须为可调用对象。</li>
+<li><code>args</code>：表示要传递给方法的参数，必须为元组。</li>
+<li><code>kwargs</code>：表示要传递给方法的关键字参数，必须为字典。</li>
+<li><code>name</code>：表示进程的名称，可以自定义，便于识别，默认为”Process-N”，其中N为进程编号。</li>
+<li><code>daemon</code>：表示该进程是否为守护进程，守护进程会随着主进程的退出而自动退出，默认为False。</li>
+<li><code>group</code>：表示进程组，暂不使用。</li>
+</ul>
+<p>创建<code>Process</code>对象的方式如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;This is a process.&#x27;</span>)<br><br>p = Process(target=func)<br></code></pre></td></tr></table></figure>
+
+<h2 id="Process对象方法"><a href="#Process对象方法" class="headerlink" title="Process对象方法"></a>Process对象方法</h2><p><code>Process</code>类还提供了以下方法：</p>
+<ul>
+<li><code>start()</code>：启动进程，会自动调用<code>run()</code>方法。</li>
+<li><code>run()</code>：进程启动后执行的方法。</li>
+<li><code>join([timeout])</code>：等待进程结束，如果指定了timeout，则最多等待timeout秒，否则一直等待进程结束。</li>
+<li><code>terminate()</code>：立即终止进程。</li>
+<li><code>is_alive()</code>：判断进程是否在运行。</li>
+</ul>
+<p>使用示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):<br>        time.sleep(<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;This is <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> second.&#x27;</span>)<br><br>p = Process(target=func)<br>p.start()<br>p.join(<span class="hljs-number">3</span>) <span class="hljs-comment"># 等待3秒</span><br>p.terminate() <span class="hljs-comment"># 终止进程</span><br><span class="hljs-keyword">if</span> p.is_alive():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Process is running.&#x27;</span>)<br><span class="hljs-keyword">else</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Process is terminated.&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="Process对象属性"><a href="#Process对象属性" class="headerlink" title="Process对象属性"></a>Process对象属性</h2><p><code>Process</code>类还提供了以下属性：</p>
+<ul>
+<li><code>name</code>：表示进程的名称，可以自定义，便于识别，默认为”Process-N”，其中N为进程编号。</li>
+<li><code>daemon</code>：表示该进程是否为守护进程，守护进程会随着主进程的退出而自动退出，默认为False。</li>
+<li><code>pid</code>：表示进程的ID。</li>
+</ul>
+<p>使用示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;This is <span class="hljs-subst">&#123;p.name&#125;</span> (<span class="hljs-subst">&#123;p.pid&#125;</span>)&#x27;</span>)<br>    time.sleep(<span class="hljs-number">3</span>)<br><br>p = Process(target=func, name=<span class="hljs-string">&#x27;MyProcess&#x27;</span>)<br>p.daemon = <span class="hljs-literal">True</span><br>p.start()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;p.name&#125;</span> (<span class="hljs-subst">&#123;p.pid&#125;</span>) is running.&#x27;</span>)<br>p.join()<br></code></pre></td></tr></table></figure>
+
+<p>以上就是<code>Process</code>对象的参数、方法和属性的详细介绍。</p>
+<h2 id="进程之间如何共享数据"><a href="#进程之间如何共享数据" class="headerlink" title="进程之间如何共享数据"></a>进程之间如何共享数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">进程之间资源是独立，那么以为全局变量不共享</span><br><span class="hljs-string"></span><br><span class="hljs-string">queue.Queue:只能在同一个进程中多个线程之间进程通讯(数据共享)</span><br><span class="hljs-string"></span><br><span class="hljs-string">multiprocessing.Queue:进程之间通信的队列(跨进程实现数据共享)</span><br><span class="hljs-string"></span><br><span class="hljs-string">multiprocessing.Manager().Queue:进程池通信的对象(进程池中多个进程之间数据共享)</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue, Manager<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work1</span>(<span class="hljs-params">que</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;work1:&#x27;</span>, que.qsize(), que.get())<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">work2</span>(<span class="hljs-params">que</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;work2:&#x27;</span>, que.qsize(), que.get())<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue()<br>    q.put(<span class="hljs-number">111</span>)<br>    q.put(<span class="hljs-number">222</span>)<br>    q.put(<span class="hljs-number">333</span>)<br>    <span class="hljs-comment"># 创建子进程</span><br>    p1 = Process(target=work1, args=(q,))<br>    p2 = Process(target=work2, args=(q,))<br>    <span class="hljs-comment"># 启动进程</span><br>    p1.start()<br>    p2.start()<br>    p1.join()<br>    p2.join()<br><br><span class="hljs-built_in">print</span>(q.qsize())<br></code></pre></td></tr></table></figure>
+
+
+
+<p>在多进程编程中，进程之间共享数据是一项重要的功能。Python提供了多种共享数据的方式，下面介绍几种常用的方式。</p>
+<ol>
+<li>使用共享内存</li>
+</ol>
+<p>Python提供了multiprocessing.Value和multiprocessing.Array两个类，可以实现在多个进程之间共享数据。其中multiprocessing.Value是用于共享一个简单的C类型的值（如整数、浮点数等），multiprocessing.Array则是用于共享一个数组。</p>
+<p>例如，下面的代码演示了如何在两个进程之间共享一个整数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Value<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">worker</span>(<span class="hljs-params">count</span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(count.value):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;working...&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    count = Value(<span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-number">5</span>)  <span class="hljs-comment"># 创建一个共享的整数对象</span><br>    p = Process(target=worker, args=(count,))<br>    p.start()<br>    p.join()<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，首先创建了一个共享的整数对象count，然后传递给子进程worker。在子进程中，通过count.value来获取这个共享的整数对象的值。需要注意的是，在共享数据时需要使用锁来保证数据的正确性。</p>
+<ol>
+<li>使用队列</li>
+</ol>
+<p>队列是多进程编程中常用的一种数据结构，Python中的multiprocessing.Queue类可以实现进程之间的通信和数据共享。</p>
+<p>例如，下面的代码演示了如何在两个进程之间共享一个队列：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Queue<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">worker</span>(<span class="hljs-params">q</span>):<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        data = q.get()<br>        <span class="hljs-keyword">if</span> data <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-keyword">break</span><br>        <span class="hljs-built_in">print</span>(data)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    q = Queue()  <span class="hljs-comment"># 创建一个队列</span><br>    p = Process(target=worker, args=(q,))<br>    p.start()<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):<br>        q.put(i)  <span class="hljs-comment"># 向队列中添加数据</span><br><br>    q.put(<span class="hljs-literal">None</span>)  <span class="hljs-comment"># 发送结束标志给子进程</span><br><br>    p.join()<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，首先创建了一个共享队列q，然后传递给子进程worker。在主进程中，通过q.put()向队列中添加数据，在子进程中通过q.get()获取数据。需要注意的是，在使用队列时，由于队列本身已经实现了线程安全，因此不需要使用额外的锁。</p>
+<ol>
+<li>使用共享变量</li>
+</ol>
+<p>共享变量是一种进程之间共享数据的简单方法，但需要注意的是，在多进程编程中需要使用进程锁来保证数据的正确性。下面的代码演示了如何在两个进程之间共享一个变量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, Lock<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">worker</span>(<span class="hljs-params">lock, data</span>):<br>    <span class="hljs-keyword">with</span> lock:<br>        <span class="hljs-built_in">print</span>(data.value)<br>        data.value += <span class="hljs-number">1</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    lock = Lock()<br>    data = Value(<span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-number">0</span>)<br><br>    p1 = Process(target=worker, args=(lock, data))<br>    p2 = Process(target=worker, args=(lock, data))<br><br>    p1.start()<br>    p2.start()<br><br>    p1.join()<br>    p2.join<br></code></pre></td></tr></table></figure>
+
+<h2 id="可序列化的python对象"><a href="#可序列化的python对象" class="headerlink" title="可序列化的python对象"></a>可序列化的python对象</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pickle<br><br><span class="hljs-keyword">import</span> unittest<br><br>a = <span class="hljs-number">11</span><br><br>res = pickle.dumps(a)<br><br><span class="hljs-built_in">print</span>(res)<br><br>testr = unittest.TestResult()<br><br>res = pickle.dumps(testr)<br><br><span class="hljs-built_in">print</span>(res)<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python%E8%AF%AD%E6%B3%95/">#python语法</a>
+      
+        <a href="/tags/python%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">#python高级语法</a>
+      
+        <a href="/tags/python%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91/">#python测试开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python多进程</div>
+      <div>http://example.com/2020/05/11/Python多进程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>魏振</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年5月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/05/17/Python%E8%BF%9B%E7%A8%8B%E6%B1%A0%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="Python进程池和线程池">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python进程池和线程池</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/01/Python%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%EF%BC%9A%E5%88%9D%E6%AD%A5%E4%BA%86%E8%A7%A3%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86/" title="Python多线程编程入门指南：初步了解并行处理">
+                        <span class="hidden-mobile">Python多线程编程入门指南：初步了解并行处理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://opentester.cn" target="_blank" rel="nofollow noopener"><span>魏振博客-专注测试猿知识分享</span></a>
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
